@@ -10,7 +10,6 @@
         :root {
             --paper-bg: #ffffff;
             --text-main: #000000;
-            --academic-gray: #4b5563;
         }
 
         body {
@@ -75,6 +74,7 @@
         .question-block {
             margin-bottom: 2.5rem;
             position: relative;
+            clear: both;
         }
 
         .marks {
@@ -87,6 +87,7 @@
             font-weight: 700;
             margin-bottom: 1rem;
             display: block;
+            max-width: 90%;
         }
 
         table {
@@ -150,8 +151,9 @@
     <script>
         const appContainer = document.getElementById('app');
 
+        // Marks distribution for a 100 mark board exam
         const MARKS_MAP = {
-            1: 5, 2: 5, 3: 12, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5
+            1: 5, 2: 5, 3: 10, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5, 11: 5, 12: 10, 13: 10
         };
 
         async function loadExam() {
@@ -161,7 +163,7 @@
                 const data = await response.json();
                 renderPaper(data);
             } catch (error) {
-                appContainer.innerHTML = `<div class="text-center py-20 text-red-500">Error: mq.json not found.</div>`;
+                appContainer.innerHTML = `<div class="text-center py-20 text-red-500">Error: mq.json not found in the same folder.</div>`;
             }
         }
 
@@ -219,25 +221,25 @@
                             </table>
                         `;
                     } else if (q.type === 'sentence_making') {
-                        html += `<div class="flex gap-4 mt-2 italic font-bold">Words: ${q.words.join(', ')}</div>`;
-                    } else if (q.type === 'short_answer' || q.type === 'descriptive') {
+                        html += `<div class="flex gap-4 mt-2 italic font-bold ml-8">Words: ${q.words.join(', ')}</div>`;
+                    } else if (q.type === 'short_answer' || q.type === 'descriptive' || q.type === 'composition') {
                         html += `
-                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2 font-medium">
+                            <ol class="list-[lower-alpha] ml-12 space-y-2 mt-2 font-medium">
                                 ${q.items.map(item => `<li>${item}</li>`).join('')}
                             </ol>
                         `;
                     } else if (q.type === 'fill_in_the_blanks') {
                         html += `
-                            <div class="border border-black p-3 text-center my-3 font-bold">
+                            <div class="border border-black p-3 text-center my-3 font-bold max-w-2xl mx-auto">
                                 ${q.clues.join(' | ')}
                             </div>
-                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2">
+                            <ol class="list-[lower-alpha] ml-12 space-y-2 mt-2">
                                 ${q.items.map(item => `<li>${item}</li>`).join('')}
                             </ol>
                         `;
                     } else if (q.type === 'mcq') {
                         html += q.items.map((item, idx) => `
-                            <div class="mt-4">
+                            <div class="mt-4 ml-8">
                                 <p class="font-bold">${String.fromCharCode(97+idx)}) ${item.q}</p>
                                 <div class="mcq-grid">
                                     ${item.options.map((opt, i) => `<span>(${['i','ii','iii','iv'][i]}) ${opt}</span>`).join('')}
@@ -246,18 +248,22 @@
                         `).join('');
                     } else if (q.type === 'wh_questions') {
                         html += `
-                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2">
+                            <ol class="list-[lower-alpha] ml-12 space-y-2 mt-2">
                                 ${q.items.map(item => `<li>${item.text.replace(item.underlined, `<u>${item.underlined}</u>`)}</li>`).join('')}
                             </ol>
                         `;
                     } else if (q.type === 'rearrange') {
                         html += `
-                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2 italic">
+                            <ol class="list-[lower-alpha] ml-12 space-y-2 mt-2 italic">
                                 ${q.items.map(item => `<li>${item}</li>`).join('')}
                             </ol>
                         `;
                     } else if (q.type === 'punctuation') {
-                        html += `<div class="italic p-4 bg-slate-50 border mt-2 academic-serif">${q.text}</div>`;
+                        html += `<div class="italic p-4 bg-slate-50 border mt-2 academic-serif ml-8">${q.text}</div>`;
+                    } else if (q.type === 'gap_fill_verbs') {
+                        html += `<div class="mt-2 academic-serif ml-8 leading-relaxed">${q.text}</div>`;
+                    } else if (q.type === 'letter') {
+                        html += `<div class="mt-2 ml-8 italic text-slate-600 border-l-2 pl-4">Topic for Letter: ${q.instruction.split('about ')[1] || 'As stated above.'}</div>`;
                     } else if (q.type === 'form_filling') {
                         html += `
                             <div class="border-2 border-black p-10 mt-6 max-w-lg mx-auto relative page-break">
