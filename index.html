@@ -33,6 +33,19 @@
             line-height: 1.5;
         }
 
+        /* Top Control Panel - On Paper */
+        .control-panel {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
         .header-top {
             text-align: center;
             border-bottom: 3px double #000;
@@ -134,6 +147,7 @@
 </head>
 <body>
 
+    <!-- Sticky Toolbar -->
     <div class="no-print fixed top-6 right-6 z-50 flex flex-col gap-3">
         <button onclick="window.print()" class="bg-black text-white px-6 py-3 rounded-full font-bold shadow-lg flex items-center gap-2 hover:scale-105 transition">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
@@ -144,32 +158,97 @@
     <div id="app" class="paper">
         <div class="text-center py-20">
             <div class="animate-spin h-8 w-8 border-4 border-slate-300 border-t-black rounded-full mx-auto mb-4"></div>
-            <p class="text-slate-500 font-medium">Preparing Examination Paper...</p>
+            <p class="text-slate-500 font-medium text-lg">Loading Question Paper...</p>
         </div>
     </div>
 
     <script>
         const appContainer = document.getElementById('app');
+        let rawData = null;
+        let currentTargetMarks = 100;
 
-        // Marks distribution for a 100 mark board exam
         const MARKS_MAP = {
             1: 5, 2: 5, 3: 10, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5, 11: 5, 12: 10, 13: 10
         };
 
-        async function loadExam() {
+        async function fetchInitialData() {
             try {
                 const response = await fetch('mq.json');
                 if (!response.ok) throw new Error('Could not find mq.json');
-                const data = await response.json();
-                renderPaper(data);
+                rawData = await response.json();
+                renderPaper(rawData, currentTargetMarks);
             } catch (error) {
-                appContainer.innerHTML = `<div class="text-center py-20 text-red-500">Error: mq.json not found in the same folder.</div>`;
+                console.error(error);
+                appContainer.innerHTML = `<div class="text-center py-20 text-red-500">Error: mq.json not found. Make sure the JSON file is in the same folder.</div>`;
             }
         }
 
-        function renderPaper(data) {
+        function updateMarks() {
+            const input = document.getElementById('target-marks-input');
+            const val = parseInt(input.value);
+            if (val >= 5 && val <= 100) {
+                currentTargetMarks = val;
+                renderPaper(rawData, currentTargetMarks);
+            }
+        }
+
+        function filterExamData(data, targetMarks) {
+            let currentTotal = 0;
+            const filteredFullExam = [];
+
+            for (const section of data.full_exam) {
+                const newSection = { ...section, questions: [] };
+                let sectionHasQuestions = false;
+
+                for (const question of section.questions) {
+                    const qMarks = MARKS_MAP[question.id] || 0;
+                    
+                    if (currentTotal + qMarks <= targetMarks) {
+                        newSection.questions.push(question);
+                        currentTotal += qMarks;
+                        sectionHasQuestions = true;
+                    }
+                    if (currentTotal >= targetMarks) break;
+                }
+
+                if (sectionHasQuestions) {
+                    filteredFullExam.push(newSection);
+                }
+                if (currentTotal >= targetMarks) break;
+            }
+
+            return {
+                ...data,
+                full_exam: filteredFullExam,
+                actualTotal: currentTotal
+            };
+        }
+
+        function renderPaper(originalData, targetMarks) {
+            const data = filterExamData(originalData, targetMarks);
+            
             let html = `
                 <div class="watermark">Question Paper</div>
+                
+                <!-- Control Panel -->
+                <div class="control-panel no-print">
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold uppercase text-slate-500 tracking-wider mb-1">Set Exam Marks</label>
+                        <div class="flex items-center gap-3">
+                            <input type="number" id="target-marks-input" value="${targetMarks}" min="5" max="100" 
+                                   class="w-24 px-3 py-2 border-2 border-slate-200 rounded-lg focus:border-black focus:outline-none font-bold text-center">
+                            <button onclick="updateMarks()" class="bg-black text-white px-5 py-2 rounded-lg font-bold hover:bg-slate-800 transition text-sm">
+                                Apply Marks
+                            </button>
+                        </div>
+                    </div>
+                    <div class="h-10 w-[1px] bg-slate-200 mx-2"></div>
+                    <div class="text-center">
+                        <div class="text-[10px] font-bold uppercase text-slate-500 tracking-wider mb-1">Generated Total</div>
+                        <div class="text-xl font-black">${data.actualTotal} / 100</div>
+                    </div>
+                </div>
+
                 <div class="header-top">
                     <h1 class="academic-serif text-3xl font-bold uppercase mb-1">Board of Primary Education</h1>
                     <h2 class="text-xl font-semibold mb-2">Model Question Examination - ${data.year}</h2>
@@ -178,18 +257,18 @@
 
                 <div class="exam-info-grid">
                     <div>Class: ${data.class}</div>
-                    <div class="text-right">Time: 2 Hours 30 Minutes</div>
+                    <div class="text-right">Time: ${data.actualTotal < 60 ? '1 Hour 30 Mins' : '2 Hours 30 Mins'}</div>
                     <div>Set: ${data.model_id}</div>
-                    <div class="text-right">Full Marks: 100</div>
+                    <div class="text-right">Full Marks: ${data.actualTotal}</div>
                 </div>
 
                 <div class="mb-10 text-center font-bold text-sm border p-2 bg-slate-50">
-                    [Answer all the questions. Figures in the right-hand margin indicate full marks.]
+                    [Answer the questions as instructed. Figures in the right-hand margin indicate full marks.]
                 </div>
             `;
 
             data.full_exam.forEach((sec, sIdx) => {
-                if (sec.passage) {
+                if (sec.passage && sec.questions.length > 0) {
                     html += `
                         <div class="passage-section">
                             <span class="passage-title">Read the following passage carefully:</span>
@@ -263,7 +342,7 @@
                     } else if (q.type === 'gap_fill_verbs') {
                         html += `<div class="mt-2 academic-serif ml-8 leading-relaxed">${q.text}</div>`;
                     } else if (q.type === 'letter') {
-                        html += `<div class="mt-2 ml-8 italic text-slate-600 border-l-2 pl-4">Topic for Letter: ${q.instruction.split('about ')[1] || 'As stated above.'}</div>`;
+                        html += `<div class="mt-2 ml-8 italic text-slate-600 border-l-2 pl-4">Topic: ${q.instruction.split('about ')[1] || 'As stated above.'}</div>`;
                     } else if (q.type === 'form_filling') {
                         html += `
                             <div class="border-2 border-black p-10 mt-6 max-w-lg mx-auto relative page-break">
@@ -290,7 +369,7 @@
             appContainer.innerHTML = html;
         }
 
-        window.onload = loadExam;
+        window.onload = fetchInitialData;
     </script>
 </body>
 </html>
