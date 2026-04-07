@@ -33,7 +33,6 @@
         .academic-serif { font-family: 'Lora', serif; }
         .hind-siliguri { font-family: 'Hind Siliguri', sans-serif; }
         
-        /* Paper Container optimized for Mobile vs Print */
         .paper-container {
             transition: all 0.3s ease;
             width: 100%;
@@ -65,7 +64,6 @@
             }
         }
 
-        /* Dashboard Setup UI */
         .dashboard-card {
             background: white;
             border: 1px solid #e2e8f0;
@@ -74,7 +72,6 @@
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
         }
 
-        /* Academic Styling */
         .header-top {
             text-align: center;
             border-bottom: 3px double #000;
@@ -139,7 +136,6 @@
             .mcq-grid { grid-template-cols: 1fr 1fr; }
         }
 
-        /* Print Overrides */
         @media print {
             body { background: white; }
             .paper-container { padding: 0; margin: 0; max-width: none; }
@@ -162,12 +158,24 @@
             z-index: 0;
             text-transform: uppercase;
         }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-blur: 4px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
     </style>
 </head>
 <body class="antialiased">
 
     <!-- Developer Info Modal -->
-    <div id="info-modal" class="no-print hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6">
+    <div id="info-modal" class="no-print hidden modal-overlay">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center transform transition-all scale-95 opacity-0 duration-300" id="info-modal-content">
             <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
@@ -180,7 +188,24 @@
         </div>
     </div>
 
-    <!-- PWA Installer Banner (Mobile Only) -->
+    <!-- Password Lock Modal -->
+    <div id="password-modal" class="no-print hidden modal-overlay">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
+            <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Access Locked</h3>
+            <p class="text-slate-500 text-sm mb-6">Please enter the security password to begin your examination.</p>
+            <input type="password" id="exam-password" placeholder="Enter Password" class="w-full px-4 py-3 border-2 border-slate-100 rounded-2xl mb-4 focus:border-blue-500 outline-none text-center font-bold">
+            <p id="password-error" class="text-red-500 text-xs mb-4 hidden font-bold">Invalid password. Try again.</p>
+            <div class="flex gap-3">
+                <button onclick="togglePasswordModal(false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-2xl font-bold">Cancel</button>
+                <button onclick="verifyPassword()" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-200">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PWA Installer Banner -->
     <div id="pwa-banner" class="no-print hidden fixed bottom-4 left-4 right-4 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl z-[100] flex items-center justify-between border border-slate-700">
         <div class="flex items-center gap-3">
             <div class="bg-blue-500 p-2 rounded-lg">
@@ -188,13 +213,13 @@
             </div>
             <div>
                 <p class="font-bold text-sm">Install ExamPro</p>
-                <p class="text-xs text-slate-400">Access offline anytime</p>
+                <p class="text-xs text-slate-400">Offline access enabled</p>
             </div>
         </div>
-        <button onclick="installPWA()" class="bg-blue-600 px-4 py-2 rounded-xl text-sm font-bold">Install</button>
+        <button onclick="triggerPWAInstall()" class="bg-blue-600 px-4 py-2 rounded-xl text-sm font-bold">Install</button>
     </div>
 
-    <!-- Mobile Navigation / Header -->
+    <!-- Mobile Navigation -->
     <nav class="no-print sticky top-0 bg-slate-900 text-white p-4 z-50 flex items-center justify-between shadow-lg md:px-8">
         <div class="flex items-center gap-2">
             <div class="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center font-black italic">E</div>
@@ -203,21 +228,18 @@
         <div class="flex items-center gap-3">
             <div id="timer-display" class="hidden font-mono bg-slate-800 px-3 py-1 rounded-full text-blue-400 text-sm border border-slate-700">00:00:00</div>
             
-            <!-- Info Icon Button -->
-            <button onclick="toggleInfoModal(true)" class="p-2 hover:bg-slate-800 rounded-full transition text-blue-400" title="Developer Info">
+            <button onclick="toggleInfoModal(true)" class="p-2 hover:bg-slate-800 rounded-full transition text-blue-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </button>
 
-            <button onclick="window.print()" class="p-2 hover:bg-slate-800 rounded-full transition" title="Print Paper">
+            <button onclick="window.print()" class="p-2 hover:bg-slate-800 rounded-full transition">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             </button>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main id="main-content" class="pb-20">
-        
-        <!-- Setup / Dashboard State -->
+        <!-- Setup View -->
         <div id="setup-view" class="paper-container py-8">
             <div class="dashboard-card max-w-lg mx-auto">
                 <div class="text-center mb-8">
@@ -237,9 +259,6 @@
                         <input type="range" id="marks-slider" min="10" max="100" step="5" value="100" 
                                oninput="document.getElementById('marks-badge').innerText = this.value + ' Marks'"
                                class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-                        <div class="flex justify-between text-[10px] text-slate-400 font-bold mt-1">
-                            <span>10</span><span>25</span><span>50</span><span>75</span><span>100</span>
-                        </div>
                     </div>
 
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-4">
@@ -250,19 +269,16 @@
                         </div>
                     </div>
 
-                    <button onclick="generateExam()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-blue-200 transition-all active:scale-95">
-                        Start Practice Now
+                    <button onclick="togglePasswordModal(true)" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-blue-200 transition-all active:scale-95">
+                        Start Exam
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Paper View State -->
+        <!-- Paper View -->
         <div id="paper-view" class="paper-container hidden">
-            <div class="paper" id="paper-content">
-                <!-- Data Injected Here -->
-            </div>
-            
+            <div class="paper" id="paper-content"></div>
             <div class="no-print mt-8 flex justify-center pb-12">
                 <button onclick="showSetup()" class="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-bold px-6 py-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -270,34 +286,16 @@
                 </button>
             </div>
         </div>
-
     </main>
 
     <script>
+        const EXAM_PASSWORD = "mizan@1234";
         let rawData = null;
         let timerInterval = null;
         let secondsElapsed = 0;
+        let deferredPrompt = null;
 
-        // Info Modal Logic
-        function toggleInfoModal(show) {
-            const modal = document.getElementById('info-modal');
-            const content = document.getElementById('info-modal-content');
-            if (show) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    content.classList.remove('scale-95', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            } else {
-                content.classList.add('scale-95', 'opacity-0');
-                content.classList.remove('scale-100', 'opacity-100');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
-            }
-        }
-
-        // PWA SETUP (Single File Hack)
+        // PWA Setup
         const manifest = {
             "name": "ExamPro Portal",
             "short_name": "ExamPro",
@@ -305,53 +303,74 @@
             "display": "standalone",
             "background_color": "#0f172a",
             "theme_color": "#0f172a",
-            "icons": [{
-                "src": "https://cdn-icons-png.flaticon.com/512/2232/2232688.png",
-                "sizes": "512x512",
-                "type": "image/png"
-            }]
+            "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/2232/2232688.png", "sizes": "512x512", "type": "image/png"}]
         };
-
         const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-        const manifestURL = URL.createObjectURL(manifestBlob);
-        const manifestLink = document.createElement('link');
-        manifestLink.rel = 'manifest';
-        manifestLink.href = manifestURL;
-        document.head.appendChild(manifestLink);
+        document.head.appendChild(Object.assign(document.createElement('link'), {rel: 'manifest', href: URL.createObjectURL(manifestBlob)}));
 
-        // Service Worker Script
-        const swContent = `
-            const CACHE_NAME = 'exampro-v2';
-            self.addEventListener('install', e => {
-                e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['/'])));
-            });
-            self.addEventListener('fetch', e => {
-                e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-            });
-        `;
-        const swBlob = new Blob([swContent], {type: 'application/javascript'});
-        const swURL = URL.createObjectURL(swBlob);
-        
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(swURL).catch(e => console.log("SW Fail"));
+        // Installation Logic
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Only show banner if not already running as PWA
+            if (!window.matchMedia('(display-mode: standalone)').matches) {
+                document.getElementById('pwa-banner').classList.remove('hidden');
+            }
+        });
+
+        async function triggerPWAInstall() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('pwa-banner').classList.add('hidden');
+            }
+            deferredPrompt = null;
         }
 
-        // MARKS CONFIG
-        const MARKS_MAP = {
-            1: 5, 2: 5, 3: 10, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5, 11: 5, 12: 10, 13: 10
-        };
+        // Modal Logic
+        function toggleInfoModal(show) {
+            const modal = document.getElementById('info-modal');
+            const content = document.getElementById('info-modal-content');
+            if (show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => { content.classList.remove('scale-95', 'opacity-0'); content.classList.add('scale-100', 'opacity-100'); }, 10);
+            } else {
+                content.classList.add('scale-95', 'opacity-0'); content.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => { modal.classList.add('hidden'); }, 300);
+            }
+        }
+
+        function togglePasswordModal(show) {
+            const modal = document.getElementById('password-modal');
+            const err = document.getElementById('password-error');
+            const input = document.getElementById('exam-password');
+            err.classList.add('hidden');
+            input.value = "";
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
+
+        function verifyPassword() {
+            const input = document.getElementById('exam-password').value;
+            const err = document.getElementById('password-error');
+            if (input === EXAM_PASSWORD) {
+                togglePasswordModal(false);
+                generateExam();
+            } else {
+                err.classList.remove('hidden');
+            }
+        }
+
+        // Exam Engine
+        const MARKS_MAP = { 1: 5, 2: 5, 3: 10, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5, 11: 5, 12: 10, 13: 10 };
 
         async function init() {
             try {
                 const res = await fetch('mq.json');
                 rawData = await res.json();
             } catch (e) {
-                document.getElementById('setup-view').innerHTML = `
-                    <div class="text-center p-8 bg-white rounded-3xl border border-red-100">
-                        <p class="text-red-500 font-bold">Error: mq.json not found.</p>
-                        <p class="text-sm text-slate-500 mt-2">Please ensure the data file is in the same directory.</p>
-                    </div>
-                `;
+                document.getElementById('setup-view').innerHTML = `<div class="text-center p-8 bg-white rounded-3xl border border-red-100"><p class="text-red-500 font-bold">Error: mq.json not found.</p></div>`;
             }
         }
 
@@ -366,7 +385,6 @@
             secondsElapsed = 0;
             const display = document.getElementById('timer-display');
             display.classList.remove('hidden');
-            
             timerInterval = setInterval(() => {
                 secondsElapsed++;
                 const h = Math.floor(secondsElapsed / 3600).toString().padStart(2, '0');
@@ -380,10 +398,8 @@
             if (!rawData) return;
             const targetMarks = parseInt(document.getElementById('marks-slider').value);
             const useTimer = document.getElementById('timer-toggle').checked;
-            
             document.getElementById('setup-view').classList.add('hidden');
             document.getElementById('paper-view').classList.remove('hidden');
-            
             if (useTimer) startTimer();
             renderPaper(targetMarks);
             window.scrollTo(0,0);
@@ -392,127 +408,65 @@
         function renderPaper(target) {
             const container = document.getElementById('paper-content');
             let currentTotal = 0;
-            const examData = JSON.parse(JSON.stringify(rawData)); // Deep clone
-            
-            // Filter logic
+            const examData = JSON.parse(JSON.stringify(rawData));
             const filteredSections = [];
             for (const section of examData.full_exam) {
                 const newSection = { ...section, questions: [] };
                 for (const q of section.questions) {
                     const m = MARKS_MAP[q.id] || 0;
-                    if (currentTotal + m <= target) {
-                        newSection.questions.push(q);
-                        currentTotal += m;
-                    }
+                    if (currentTotal + m <= target) { newSection.questions.push(q); currentTotal += m; }
                     if (currentTotal >= target) break;
                 }
                 if (newSection.questions.length > 0) filteredSections.push(newSection);
                 if (currentTotal >= target) break;
             }
 
-            // HTML Generation
             let html = `
-                <div class="watermark">Practice Mode</div>
+                <div class="watermark">Examination</div>
                 <div class="header-top">
                     <h1 class="academic-serif text-2xl md:text-3xl font-bold uppercase mb-1">Board of Primary Education</h1>
                     <h2 class="text-lg md:text-xl font-semibold mb-2">Model Question Examination - ${examData.year}</h2>
                     <p class="text-base academic-serif italic">Subject: ${examData.subject}</p>
                 </div>
-
                 <div class="exam-info-grid">
                     <div>Class: ${examData.class}</div>
                     <div class="text-right">Time: ${currentTotal < 60 ? '1 Hour 30 Mins' : '2 Hours 30 Mins'}</div>
                     <div>Set: ${examData.model_id}</div>
                     <div class="text-right">Full Marks: ${currentTotal}</div>
                 </div>
-
-                <div class="mb-8 text-center font-bold text-xs border border-black p-2">
-                    [Answer as instructed. Marks indicated in brackets]
-                </div>
+                <div class="mb-8 text-center font-bold text-xs border border-black p-2">[Answer as instructed. Marks indicated in brackets]</div>
             `;
 
             filteredSections.forEach(sec => {
                 if (sec.passage) {
-                    html += `
-                        <div class="mb-8">
-                            <span class="block font-black text-[10px] uppercase tracking-wider mb-2">Read the text below:</span>
-                            <div class="passage-text hind-siliguri bg-slate-50 p-4 rounded-xl border border-slate-100">${sec.passage}</div>
-                        </div>
-                    `;
+                    html += `<div class="mb-8"><span class="block font-black text-[10px] uppercase tracking-wider mb-2">Read the text below:</span><div class="passage-text hind-siliguri bg-slate-50 p-4 rounded-xl border border-slate-100">${sec.passage}</div></div>`;
                 }
-
                 sec.questions.forEach(q => {
-                    html += `<div class="question-block">
-                        <span class="marks">[${MARKS_MAP[q.id]}]</span>
-                        <span class="instr font-bold"><span class="mr-1">${q.id}.</span> ${q.instruction}</span>`;
-
+                    html += `<div class="question-block"><span class="marks">[${MARKS_MAP[q.id]}]</span><span class="instr font-bold"><span class="mr-1">${q.id}.</span> ${q.instruction}</span>`;
                     if (q.type === 'matching') {
-                        html += `
-                            <div class="overflow-x-auto mt-2">
-                                <table>
-                                    <thead><tr><th>Column A</th><th>Column B</th></tr></thead>
-                                    <tbody>
-                                        ${q.columnA.map((c,i) => `<tr><td>${String.fromCharCode(97+i)}) ${c}</td><td>${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td></tr>`).join('')}
-                                    </tbody>
-                                </table>
-                            </div>`;
+                        html += `<div class="overflow-x-auto mt-2"><table><thead><tr><th>Column A</th><th>Column B</th></tr></thead><tbody>${q.columnA.map((c,i) => `<tr><td>${String.fromCharCode(97+i)}) ${c}</td><td>${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td></tr>`).join('')}</tbody></table></div>`;
                     } else if (q.type === 'mcq') {
-                        html += q.items.map((item, i) => `
-                            <div class="mt-4 ml-4">
-                                <p class="font-bold text-sm">${String.fromCharCode(97+i)}) ${item.q}</p>
-                                <div class="mcq-grid mt-1 ml-4 text-sm">
-                                    ${item.options.map((opt, oi) => `<span>(${['i','ii','iii','iv'][oi]}) ${opt}</span>`).join('')}
-                                </div>
-                            </div>`).join('');
+                        html += q.items.map((item, i) => `<div class="mt-4 ml-4"><p class="font-bold text-sm">${String.fromCharCode(97+i)}) ${item.q}</p><div class="mcq-grid mt-1 ml-4 text-sm">${item.options.map((opt, oi) => `<span>(${['i','ii','iii','iv'][oi]}) ${opt}</span>`).join('')}</div></div>`).join('');
                     } else if (q.type === 'short_answer' || q.type === 'descriptive' || q.type === 'composition') {
-                        html += `<ol class="list-[lower-alpha] ml-10 mt-2 space-y-1 text-sm font-medium">
-                            ${q.items.map(it => `<li>${it}</li>`).join('')}
-                        </ol>`;
+                        html += `<ol class="list-[lower-alpha] ml-10 mt-2 space-y-1 text-sm font-medium">${q.items.map(it => `<li>${it}</li>`).join('')}</ol>`;
                     } else if (q.type === 'fill_in_the_blanks') {
-                        html += `
-                            <div class="border border-black p-2 text-center my-3 text-sm font-bold max-w-sm mx-auto">
-                                ${q.clues.join(' | ')}
-                            </div>
-                            <ul class="ml-10 space-y-1 text-sm">
-                                ${q.items.map((it, i) => `<li>${String.fromCharCode(97+i)}) ${it}</li>`).join('')}
-                            </ul>`;
+                        html += `<div class="border border-black p-2 text-center my-3 text-sm font-bold max-w-sm mx-auto">${q.clues.join(' | ')}</div><ul class="ml-10 space-y-1 text-sm">${q.items.map((it, i) => `<li>${String.fromCharCode(97+i)}) ${it}</li>`).join('')}</ul>`;
                     } else if (q.type === 'sentence_making') {
                         html += `<p class="ml-10 mt-1 italic text-sm font-bold underline">Words: ${q.words.join(', ')}</p>`;
                     } else if (q.type === 'gap_fill_verbs') {
                         html += `<div class="mt-2 text-sm ml-10 italic academic-serif leading-relaxed">${q.text}</div>`;
-                    } else if (q.type === 'letter') {
-                        html += `<p class="ml-10 mt-1 text-sm italic text-slate-600">Write about the topic provided above.</p>`;
-                    } else if (q.type === 'form_filling') {
-                        html += `
-                            <div class="border border-black p-6 mt-4 max-w-sm mx-auto relative page-break">
-                                <div class="absolute top-2 right-2 border border-black w-16 h-20 flex items-center justify-center text-[8px]">Photo</div>
-                                <h3 class="text-center font-bold text-sm underline mb-4 uppercase">Registration</h3>
-                                ${q.fields.map(f => `<div class="flex mb-2 items-end"><span class="w-24 text-[10px] font-bold uppercase">${f}</span> : <div class="flex-1 border-b border-dotted h-3"></div></div>`).join('')}
-                            </div>`;
                     } else if (q.type === 'wh_questions' || q.type === 'rearrange') {
-                        html += `<ol class="list-[lower-alpha] ml-10 mt-2 space-y-1 text-sm italic">
-                            ${q.items.map(it => `<li>${typeof it === 'string' ? it : it.text.replace(it.underlined, `<u>${it.underlined}</u>`)}</li>`).join('')}
-                        </ol>`;
+                        html += `<ol class="list-[lower-alpha] ml-10 mt-2 space-y-1 text-sm italic">${q.items.map(it => `<li>${typeof it === 'string' ? it : it.text.replace(it.underlined, `<u>${it.underlined}</u>`)}</li>`).join('')}</ol>`;
                     } else if (q.type === 'punctuation') {
                         html += `<div class="mt-1 ml-10 bg-slate-50 p-2 text-sm border academic-serif italic">${q.text}</div>`;
+                    } else if (q.type === 'form_filling') {
+                        html += `<div class="border border-black p-6 mt-4 max-w-sm mx-auto relative page-break"><div class="absolute top-2 right-2 border border-black w-16 h-20 flex items-center justify-center text-[8px]">Photo</div><h3 class="text-center font-bold text-sm underline mb-4 uppercase">Registration</h3>${q.fields.map(f => `<div class="flex mb-2 items-end"><span class="w-24 text-[10px] font-bold uppercase">${f}</span> : <div class="flex-1 border-b border-dotted h-3"></div></div>`).join('')}</div>`;
                     }
                     html += `</div>`;
                 });
             });
-
             container.innerHTML = html;
         }
-
-        function installPWA() {
-            // Simplified install logic
-            alert("To install: Tap the browser share button and select 'Add to Home Screen'");
-            document.getElementById('pwa-banner').classList.add('hidden');
-        }
-
-        // Show banner on mobile after 3 seconds
-        setTimeout(() => {
-            if (window.innerWidth < 768) document.getElementById('pwa-banner').classList.remove('hidden');
-        }, 3000);
 
         window.onload = init;
     </script>
