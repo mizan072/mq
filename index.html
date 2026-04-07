@@ -3,331 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Question 02 - Exam Paper</title>
+    <title>Model Question 02 - English</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --paper-bg: #ffffff;
-            --text-main: #1a1a1a;
-            --border-color: #333;
+            --text-main: #000000;
+            --academic-gray: #4b5563;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
+            background-color: #e5e7eb;
             color: var(--text-main);
+            -webkit-print-color-adjust: exact;
         }
 
+        .academic-serif { font-family: 'Lora', serif; }
         .hind-siliguri { font-family: 'Hind Siliguri', sans-serif; }
         
         .paper {
             background: var(--paper-bg);
-            max-width: 850px;
+            max-width: 800px;
             margin: 2rem auto;
-            padding: 3rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            min-height: 297mm; /* A4 Ratio */
+            padding: 4rem 5rem;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+            min-height: 297mm;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .header-top {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .exam-info-grid {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid #000;
+            padding-bottom: 0.5rem;
+        }
+
+        .passage-section {
+            margin: 2rem 0;
+            text-align: justify;
+        }
+
+        .passage-title {
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: block;
+            letter-spacing: 0.05em;
+        }
+
+        .passage-text {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            padding: 0 1rem;
+        }
+
+        .question-block {
+            margin-bottom: 2.5rem;
             position: relative;
         }
 
-        .exam-header {
-            text-align: center;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
+        .marks {
+            float: right;
+            font-weight: 700;
+            font-size: 0.95rem;
         }
 
-        .passage-box {
-            background: #f9fafb;
-            padding: 1.5rem;
-            border-left: 4px solid #4b5563;
-            margin: 1.5rem 0;
-            line-height: 1.6;
-            font-style: italic;
-        }
-
-        .question-item {
-            margin-bottom: 2rem;
-        }
-
-        .question-number {
-            font-weight: bold;
-            margin-right: 0.5rem;
+        .instr {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1rem 0;
+            margin-top: 1rem;
         }
 
         th, td {
-            border: 1px solid #ccc;
-            padding: 8px 12px;
-            text-align: left;
+            border: 1px solid #000;
+            padding: 10px 15px;
+            vertical-align: top;
         }
 
-        .matching-col { width: 50%; }
+        .mcq-grid {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 0.5rem 2rem;
+            margin-top: 0.5rem;
+            padding-left: 1.5rem;
+        }
 
         @media print {
-            body { background: white; }
-            .paper { box-shadow: none; margin: 0; padding: 1.5rem; max-width: 100%; }
+            body { background: white; margin: 0; }
+            .paper { box-shadow: none; margin: 0; padding: 2rem; width: 100%; max-width: none; }
             .no-print { display: none; }
             .page-break { page-break-before: always; }
         }
 
-        .input-line {
-            border: none;
-            border-bottom: 1px dotted #000;
-            width: 100%;
-            padding: 4px 0;
-            background: transparent;
-            outline: none;
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(0,0,0,0.03);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 0;
+            text-transform: uppercase;
         }
-        
-        .mcq-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .btn-primary {
-            background: #1e293b;
-            color: white;
-            padding: 10px 24px;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-primary:hover { background: #334155; }
     </style>
 </head>
 <body>
 
-    <!-- UI Controls -->
-    <div class="no-print sticky top-0 bg-white/80 backdrop-blur-md border-b p-4 flex justify-between items-center z-50">
-        <h1 class="font-bold text-slate-800">Exam Prep Portal</h1>
-        <div class="flex gap-4">
-            <button onclick="window.print()" class="text-slate-600 hover:text-black flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                Print Paper
-            </button>
-            <button onclick="submitExam()" class="btn-primary">Finish Exam</button>
-        </div>
+    <div class="no-print fixed top-6 right-6 z-50 flex flex-col gap-3">
+        <button onclick="window.print()" class="bg-black text-white px-6 py-3 rounded-full font-bold shadow-lg flex items-center gap-2 hover:scale-105 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print Paper
+        </button>
     </div>
 
     <div id="app" class="paper">
-        <div class="text-center py-10">
-            <div class="animate-pulse text-slate-400">Loading Question Paper...</div>
+        <div class="text-center py-20">
+            <div class="animate-spin h-8 w-8 border-4 border-slate-300 border-t-black rounded-full mx-auto mb-4"></div>
+            <p class="text-slate-500 font-medium">Preparing Examination Paper...</p>
         </div>
     </div>
 
     <script>
         const appContainer = document.getElementById('app');
 
-        // Function to render the matching table
-        function renderMatching(q) {
-            let html = `<div class="question-item">
-                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                <table>
-                    <thead>
-                        <tr class="bg-slate-50">
-                            <th>Column A</th>
-                            <th>Column B</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-            
-            const maxLength = Math.max(q.columnA.length, q.columnB.length);
-            for(let i=0; i < maxLength; i++) {
-                html += `<tr>
-                    <td>${q.columnA[i] ? String.fromCharCode(97 + i) + ') ' + q.columnA[i] : ''}</td>
-                    <td>${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td>
-                </tr>`;
-            }
+        const MARKS_MAP = {
+            1: 5, 2: 5, 3: 12, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5
+        };
 
-            html += `</tbody></table></div>`;
-            return html;
-        }
-
-        // Function to render MCQ
-        function renderMCQ(q) {
-            let html = `<div class="question-item">
-                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>`;
-            
-            q.items.forEach((item, index) => {
-                html += `<div class="mt-4">
-                    <p class="font-medium">(${String.fromCharCode(97 + index)}) ${item.q}</p>
-                    <div class="grid grid-cols-2 gap-2 mt-2">
-                        ${item.options.map((opt, i) => `
-                            <label class="mcq-option cursor-pointer hover:bg-slate-50 p-1 rounded">
-                                <input type="radio" name="q${q.id}_${index}" value="${opt}">
-                                <span>(${['i','ii','iii','iv'][i]}) ${opt}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                </div>`;
-            });
-
-            html += `</div>`;
-            return html;
-        }
-
-        // Main Data Fetching
         async function loadExam() {
             try {
-                // In a real environment, this fetches mq.json
-                // For this demo, we use the local data
                 const response = await fetch('mq.json');
                 if (!response.ok) throw new Error('Could not find mq.json');
                 const data = await response.json();
                 renderPaper(data);
             } catch (error) {
-                console.error(error);
-                appContainer.innerHTML = `
-                    <div class="text-red-500 text-center p-10 bg-red-50 rounded-lg border border-red-200">
-                        <h2 class="font-bold text-xl">Error Loading Paper</h2>
-                        <p>Make sure "mq.json" is in the same folder as this HTML file.</p>
-                        <button onclick="location.reload()" class="mt-4 btn-primary">Retry</button>
-                    </div>
-                `;
+                appContainer.innerHTML = `<div class="text-center py-20 text-red-500">Error: mq.json not found.</div>`;
             }
         }
 
         function renderPaper(data) {
             let html = `
-                <div class="exam-header">
-                    <h1 class="text-2xl font-bold uppercase tracking-widest mb-1">Model Question - ${data.model_id}</h1>
-                    <p class="text-slate-600 font-medium">Subject: ${data.subject} | Class: ${data.class}</p>
-                    <div class="flex justify-between mt-6 text-sm font-semibold">
-                        <span>Time: 2 Hours 30 Minutes</span>
-                        <span>Full Marks: 100</span>
-                    </div>
+                <div class="watermark">Question Paper</div>
+                <div class="header-top">
+                    <h1 class="academic-serif text-3xl font-bold uppercase mb-1">Board of Primary Education</h1>
+                    <h2 class="text-xl font-semibold mb-2">Model Question Examination - ${data.year}</h2>
+                    <p class="text-lg academic-serif italic">Subject: ${data.subject} (English Version)</p>
                 </div>
 
-                <div class="flex justify-between mb-8 border-b pb-4 gap-4 no-print">
-                    <div class="flex-1">
-                        <label class="text-xs uppercase text-slate-500 font-bold">Student Name</label>
-                        <input type="text" class="input-line" placeholder="Enter name here...">
-                    </div>
-                    <div class="w-24">
-                        <label class="text-xs uppercase text-slate-500 font-bold">Roll No</label>
-                        <input type="text" class="input-line">
-                    </div>
+                <div class="exam-info-grid">
+                    <div>Class: ${data.class}</div>
+                    <div class="text-right">Time: 2 Hours 30 Minutes</div>
+                    <div>Set: ${data.model_id}</div>
+                    <div class="text-right">Full Marks: 100</div>
+                </div>
+
+                <div class="mb-10 text-center font-bold text-sm border p-2 bg-slate-50">
+                    [Answer all the questions. Figures in the right-hand margin indicate full marks.]
                 </div>
             `;
 
             data.full_exam.forEach((sec, sIdx) => {
-                html += `<div class="section-title mt-10 mb-4 bg-slate-800 text-white px-4 py-1 inline-block rounded text-sm uppercase tracking-wider">${sec.section}</div>`;
-                
-                if(sec.passage) {
-                    html += `<div class="passage-box hind-siliguri">${sec.passage}</div>`;
-                    html += `<p class="text-sm font-bold italic mb-6">Read the text and answer the questions below:</p>`;
+                if (sec.passage) {
+                    html += `
+                        <div class="passage-section">
+                            <span class="passage-title">Read the following passage carefully:</span>
+                            <div class="passage-text hind-siliguri">${sec.passage}</div>
+                        </div>
+                    `;
                 }
 
                 sec.questions.forEach(q => {
+                    html += `<div class="question-block">
+                        <span class="marks">[${MARKS_MAP[q.id] || ''}]</span>
+                        <span class="instr"><span class="mr-2">${q.id}.</span> ${q.instruction}</span>
+                    `;
+
                     if (q.type === 'matching') {
-                        html += renderMatching(q);
-                    } else if (q.type === 'sentence_making') {
                         html += `
-                            <div class="question-item">
-                                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                                <div class="flex flex-wrap gap-4 mt-2 font-bold text-slate-700">
-                                    ${q.words.map(w => `<span class="border px-3 py-1 bg-white rounded shadow-sm">${w}</span>`).join('')}
-                                </div>
-                                <div class="mt-4 space-y-4">
-                                    ${q.words.map(() => `<div class="input-line h-8 border-b-black"></div>`).join('')}
-                                </div>
-                            </div>
+                            <table>
+                                <thead>
+                                    <tr><th>Column A</th><th>Column B</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${q.columnA.map((colA, i) => `
+                                        <tr>
+                                            <td>${String.fromCharCode(97+i)}) ${colA}</td>
+                                            <td>${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
                         `;
+                    } else if (q.type === 'sentence_making') {
+                        html += `<div class="flex gap-4 mt-2 italic font-bold">Words: ${q.words.join(', ')}</div>`;
                     } else if (q.type === 'short_answer' || q.type === 'descriptive') {
                         html += `
-                            <div class="question-item">
-                                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                                <ol class="list-[lower-alpha] ml-10 space-y-4 mt-2">
-                                    ${q.items.map(item => `<li>${item} <div class="input-line h-6"></div></li>`).join('')}
-                                </ol>
-                            </div>
+                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2 font-medium">
+                                ${q.items.map(item => `<li>${item}</li>`).join('')}
+                            </ol>
                         `;
                     } else if (q.type === 'fill_in_the_blanks') {
                         html += `
-                            <div class="question-item">
-                                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                                <div class="border-2 border-dashed border-slate-300 p-4 rounded-lg flex flex-wrap gap-4 justify-center my-4 font-semibold text-blue-700">
-                                    ${q.clues.map(c => `<span>${c}</span>`).join(' | ')}
-                                </div>
-                                <ul class="space-y-3 mt-4">
-                                    ${q.items.map((item, i) => `<li>(${String.fromCharCode(97+i)}) ${item}</li>`).join('')}
-                                </ul>
+                            <div class="border border-black p-3 text-center my-3 font-bold">
+                                ${q.clues.join(' | ')}
                             </div>
+                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2">
+                                ${q.items.map(item => `<li>${item}</li>`).join('')}
+                            </ol>
                         `;
                     } else if (q.type === 'mcq') {
-                        html += renderMCQ(q);
+                        html += q.items.map((item, idx) => `
+                            <div class="mt-4">
+                                <p class="font-bold">${String.fromCharCode(97+idx)}) ${item.q}</p>
+                                <div class="mcq-grid">
+                                    ${item.options.map((opt, i) => `<span>(${['i','ii','iii','iv'][i]}) ${opt}</span>`).join('')}
+                                </div>
+                            </div>
+                        `).join('');
                     } else if (q.type === 'wh_questions') {
                         html += `
-                            <div class="question-item">
-                                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                                <ul class="list-[lower-alpha] ml-10 space-y-3 mt-2">
-                                    ${q.items.map(item => `<li>${item.text.replace(item.underlined, `<u>${item.underlined}</u>`)} <div class="input-line h-6"></div></li>`).join('')}
-                                </ul>
-                            </div>
+                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2">
+                                ${q.items.map(item => `<li>${item.text.replace(item.underlined, `<u>${item.underlined}</u>`)}</li>`).join('')}
+                            </ol>
                         `;
                     } else if (q.type === 'rearrange') {
                         html += `
-                            <div class="question-item">
-                                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                                <ul class="list-[lower-alpha] ml-10 space-y-3 mt-2">
-                                    ${q.items.map(item => `<li>${item} <div class="input-line h-6"></div></li>`).join('')}
-                                </ul>
-                            </div>
+                            <ol class="list-[lower-alpha] ml-8 space-y-2 mt-2 italic">
+                                ${q.items.map(item => `<li>${item}</li>`).join('')}
+                            </ol>
                         `;
                     } else if (q.type === 'punctuation') {
-                        html += `
-                            <div class="question-item">
-                                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                                <div class="italic text-slate-500 p-3 bg-slate-50 rounded mt-2">${q.text}</div>
-                                <div class="input-line h-16 mt-2"></div>
-                            </div>
-                        `;
+                        html += `<div class="italic p-4 bg-slate-50 border mt-2 academic-serif">${q.text}</div>`;
                     } else if (q.type === 'form_filling') {
                         html += `
-                            <div class="question-item page-break">
-                                <p><span class="question-number">${q.id}.</span> ${q.instruction}</p>
-                                <div class="border-2 border-black p-8 mt-4 max-w-md mx-auto relative">
-                                    <div class="absolute top-4 right-4 border border-black w-24 h-28 flex items-center justify-center text-xs text-slate-400">Photo</div>
-                                    <h3 class="text-center font-bold text-lg mb-6">Application Form</h3>
-                                    ${q.fields.map(f => `
-                                        <div class="flex mb-4 items-end">
-                                            <span class="w-32 text-sm font-semibold">${f}</span>
-                                            <span class="mr-2">:</span>
-                                            <div class="flex-1 border-b border-black h-5"></div>
-                                        </div>
-                                    `).join('')}
-                                    <div class="mt-12 text-right">
-                                        <div class="inline-block border-t border-black px-8 py-1 text-sm font-bold">Signature</div>
+                            <div class="border-2 border-black p-10 mt-6 max-w-lg mx-auto relative page-break">
+                                <div class="absolute top-6 right-6 border border-black w-24 h-28 flex items-center justify-center text-[10px] uppercase font-bold text-slate-400">Photo</div>
+                                <h3 class="text-center font-bold text-xl uppercase mb-8 underline">Registration Form</h3>
+                                ${q.fields.map(f => `
+                                    <div class="flex mb-5 items-end">
+                                        <span class="w-40 text-sm font-bold uppercase">${f}</span>
+                                        <span class="mr-3">:</span>
+                                        <div class="flex-1 border-b border-dotted border-slate-400 h-5"></div>
                                     </div>
+                                `).join('')}
+                                <div class="mt-16 flex justify-between text-xs font-bold uppercase">
+                                    <span class="border-t border-black pt-1">Guardian's Signature</span>
+                                    <span class="border-t border-black pt-1">Candidate's Signature</span>
                                 </div>
                             </div>
                         `;
                     }
+                    html += `</div>`;
                 });
             });
 
             appContainer.innerHTML = html;
-        }
-
-        function submitExam() {
-            const btn = event.target;
-            btn.innerHTML = "Submitting...";
-            btn.disabled = true;
-            
-            setTimeout(() => {
-                alert("Success! Your answers have been recorded for evaluation. Good luck!");
-                btn.innerHTML = "Exam Finished";
-            }, 1500);
         }
 
         window.onload = loadExam;
