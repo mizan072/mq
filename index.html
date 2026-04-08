@@ -11,50 +11,115 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2232/2232688.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --paper-bg: #ffffff; --text-main: #000000; }
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: var(--text-main); -webkit-tap-highlight-color: transparent; }
+        :root { 
+            --paper-bg: #ffffff; 
+            --text-main: #000000; 
+            --accent: #2563eb;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #f8fafc;
+            color: #1e293b;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         .academic-serif { font-family: 'Lora', serif; }
         .hind-siliguri { font-family: 'Hind Siliguri', sans-serif; }
         
-        .paper-container { max-width: 850px; margin: 0 auto; padding: 1rem; }
-        .paper { background: var(--paper-bg); width: 100%; padding: 2rem 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); min-height: 100vh; position: relative; line-height: 1.6; border-radius: 0.5rem; }
-        
-        @media (min-width: 768px) {
-            .paper { padding: 4rem 5rem; border-radius: 0; min-height: 297mm; }
+        /* Premium UI Elements */
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .category-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; }
-        .category-card:hover { transform: translateY(-5px); }
+        .subject-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
-        .header-top { text-align: center; border-bottom: 3px double #000; padding-bottom: 1.5rem; margin-bottom: 2rem; }
-        .exam-info-grid { display: grid; grid-template-cols: 1fr 1fr; font-weight: 600; font-size: 0.85rem; margin-bottom: 2rem; border-bottom: 1px solid #000; padding-bottom: 0.5rem; }
-        .passage-text { font-family: 'Lora', serif; font-size: 1.05rem; line-height: 1.8; text-align: justify; }
-        .question-block { margin-bottom: 2rem; position: relative; clear: both; }
-        .marks { float: right; font-weight: 700; font-size: 0.9rem; color: #444; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
-        th, td { border: 1px solid #000; padding: 8px 12px; vertical-align: top; }
-        .mcq-grid { display: grid; grid-template-cols: 1fr; gap: 0.25rem; margin-top: 0.5rem; }
-        @media (min-width: 480px) { .mcq-grid { grid-template-cols: 1fr 1fr; } }
+        /* Question Paper Aesthetic */
+        .paper-container { max-width: 850px; margin: 0 auto; padding: 1rem; }
+        
+        .paper { 
+            background: var(--paper-bg); 
+            width: 100%; 
+            padding: 2.5rem 1.5rem; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+            min-height: 100vh; 
+            position: relative; 
+            line-height: 1.7; 
+            border-radius: 1rem;
+            color: #000;
+        }
+        
+        @media (min-width: 768px) {
+            .paper { padding: 5rem 6rem; border-radius: 0; min-height: 297mm; }
+        }
+
+        .header-top { text-align: center; border-bottom: 4px double #000; padding-bottom: 1.5rem; margin-bottom: 2.5rem; }
+        .exam-info-grid { display: grid; grid-template-cols: 1fr 1fr; font-weight: 700; font-size: 0.9rem; margin-bottom: 2.5rem; border-bottom: 1px solid #000; padding-bottom: 0.75rem; }
+        
+        .question-block { margin-bottom: 3rem; position: relative; clear: both; }
+        .marks-tag { 
+            float: right; 
+            font-weight: 800; 
+            font-size: 0.85rem; 
+            color: #000; 
+            border: 1px solid #000;
+            padding: 1px 8px;
+            margin-left: 1rem;
+        }
+
+        .instr-text { font-weight: 800; display: block; margin-bottom: 1rem; font-size: 1.05rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        th, td { border: 1px solid #000; padding: 12px; vertical-align: top; text-align: left; }
+
+        .mcq-option-grid { 
+            display: grid; 
+            grid-template-cols: 1fr; 
+            gap: 0.5rem; 
+            margin-top: 0.5rem; 
+            padding-left: 1.5rem;
+        }
+        @media (min-width: 540px) { .mcq-option-grid { grid-template-cols: 1fr 1fr; } }
 
         @media print {
             body { background: white; }
             .paper-container { padding: 0; margin: 0; max-width: none; }
             .paper { box-shadow: none; padding: 0; border-radius: 0; width: 100%; }
             .no-print { display: none !important; }
-            .marks { background: transparent; padding: 0; border: none; }
+            .marks-tag { border: none; padding: 0; }
         }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
-        
+        .modal-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(8px); 
+            z-index: 200; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 1.5rem; 
+        }
+
         .watermark {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 6rem;
+            font-size: 7rem;
             font-weight: 900;
             color: rgba(0,0,0,0.02);
             pointer-events: none;
@@ -62,51 +127,62 @@
             z-index: 0;
             text-transform: uppercase;
         }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Info Modal -->
+    <!-- Developer Info Modal -->
     <div id="info-modal" class="no-print hidden modal-overlay">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
-            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center border border-slate-100">
+            <div class="w-20 h-20 bg-blue-600 text-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-200 rotate-12">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Developer Info</h3>
-            <p class="text-slate-600">Developed By <span class="font-bold text-blue-600">MD.MIZANUR ISLAM</span> for take the test of his dear student.</p>
-            <button onclick="toggleModal('info-modal', false)" class="mt-8 w-full bg-slate-900 text-white py-3 rounded-2xl font-bold">Close</button>
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Developed By</h3>
+            <p class="text-slate-500 font-medium mb-1">MD. MIZANUR ISLAM</p>
+            <p class="text-sm text-slate-400 italic">For his dear students</p>
+            <button onclick="toggleModal('info-modal', false)" class="mt-8 w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">Dismiss</button>
         </div>
     </div>
 
     <!-- Password Modal -->
     <div id="password-modal" class="no-print hidden modal-overlay">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
-            <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
-            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Unlock Exam</h3>
-            <p class="text-slate-500 text-sm mb-6">Enter password to unlock this subject permanently.</p>
-            <input type="password" id="exam-password" placeholder="Password" class="w-full px-4 py-3 border-2 border-slate-100 rounded-2xl mb-2 focus:border-blue-500 outline-none text-center font-bold">
-            <p id="password-error" class="text-red-500 text-xs mb-4 hidden">Incorrect password.</p>
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Access Code</h3>
+            <p class="text-slate-500 text-sm mb-6">This subject is protected. Enter the password provided by your teacher.</p>
+            <input type="password" id="exam-password" placeholder="••••••••" class="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl mb-2 focus:border-blue-500 focus:bg-white outline-none text-center font-black tracking-[0.5em]">
+            <p id="password-error" class="text-red-500 text-xs mb-4 hidden font-bold">Access Denied: Incorrect Password</p>
             <div class="flex gap-3">
-                <button onclick="toggleModal('password-modal', false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-2xl font-bold">Cancel</button>
-                <button onclick="verifyPassword()" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-bold">Unlock</button>
+                <button onclick="toggleModal('password-modal', false)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold">Cancel</button>
+                <button onclick="verifyPassword()" class="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200">Unlock</button>
             </div>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="no-print sticky top-0 bg-slate-900 text-white p-4 z-50 flex items-center justify-between shadow-lg md:px-8">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="showHome()">
-            <div class="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center font-black">E</div>
-            <h1 class="font-bold tracking-tight uppercase">ExamPro</h1>
+    <!-- Main Navigation -->
+    <nav class="no-print sticky top-0 glass z-50 p-4 flex items-center justify-between md:px-12 border-b border-slate-200">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="showHome()">
+            <div class="bg-blue-600 w-10 h-10 rounded-xl flex items-center justify-center font-black text-white shadow-lg shadow-blue-200">E</div>
+            <div class="hidden sm:block">
+                <h1 class="font-black tracking-tighter text-slate-900 leading-none">EXAMPRO</h1>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Digital Portal</span>
+            </div>
         </div>
-        <div class="flex items-center gap-3">
-            <div id="timer-display" class="hidden font-mono bg-slate-800 px-3 py-1 rounded-full text-blue-400 text-sm border border-slate-700">00:00:00</div>
-            <button onclick="window.print()" class="p-2 hover:bg-slate-800 rounded-full transition text-slate-400">
+        
+        <div class="flex items-center gap-2">
+            <div id="timer-display" class="hidden font-mono bg-white border border-slate-200 px-4 py-1.5 rounded-full text-blue-600 text-sm font-bold shadow-sm">00:00:00</div>
+            <button onclick="window.print()" class="p-2.5 hover:bg-slate-100 rounded-xl transition-all text-slate-500" title="Print Paper">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             </button>
-            <button onclick="toggleModal('info-modal', true)" class="p-2 hover:bg-slate-800 rounded-full transition text-blue-400">
+            <button onclick="toggleModal('info-modal', true)" class="p-2.5 bg-slate-900 hover:bg-black rounded-xl transition-all text-white shadow-lg" title="About Developer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </button>
         </div>
@@ -115,50 +191,78 @@
     <main class="pb-20">
         
         <!-- Home View -->
-        <div id="home-view" class="paper-container py-8">
-            <h2 class="text-2xl font-extrabold text-slate-800 mb-6 px-2">Subjects</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div id="home-view" class="paper-container py-12">
+            <div class="mb-12 px-4">
+                <h2 class="text-4xl font-black text-slate-900 tracking-tight mb-2">Practice Subjects</h2>
+                <p class="text-slate-500 font-medium">Select a subject to customize and start your exam test.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
                 <!-- English -->
-                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200" onclick="selectSubject('mq.json', 'english')">
-                    <div id="lock-english" class="absolute top-4 right-4"></div>
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 font-bold">EN</div>
-                    <h3 class="text-xl font-bold">English</h3>
-                    <p class="text-sm text-slate-500">Model Question 02</p>
+                <div class="subject-card bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden flex flex-col" onclick="selectSubject('mq.json', 'english')">
+                    <div id="lock-english" class="absolute top-6 right-6"></div>
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 font-black text-xl">EN</div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-1">English</h3>
+                    <p class="text-sm text-slate-400 font-medium">PSC Model Question 02</p>
+                    <div class="mt-8 flex items-center text-blue-600 font-bold text-sm">
+                        Open Test <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </div>
                 </div>
+
                 <!-- Science -->
-                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200" onclick="selectSubject('biggan.json', 'science')">
-                    <div id="lock-science" class="absolute top-4 right-4"></div>
-                    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4 font-bold">বিজ্ঞান</div>
-                    <h3 class="text-xl font-bold hind-siliguri">প্রাথমিক বিজ্ঞান</h3>
-                    <p class="text-sm text-slate-500">অধ্যায় ভিত্তিক মূল্যায়ন</p>
+                <div class="subject-card bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden flex flex-col" onclick="selectSubject('biggan.json', 'science')">
+                    <div id="lock-science" class="absolute top-6 right-6"></div>
+                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 font-black text-xl">SC</div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-1 hind-siliguri">প্রাথমিক বিজ্ঞান</h3>
+                    <p class="text-sm text-slate-400 font-medium">Chapter-based Assessment</p>
+                    <div class="mt-8 flex items-center text-emerald-600 font-bold text-sm">
+                        Open Test <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </div>
                 </div>
+
                 <!-- BGS -->
-                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200" onclick="selectSubject('bd.json', 'bgs')">
-                    <div id="lock-bgs" class="absolute top-4 right-4"></div>
-                    <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4 font-bold">বি.বি</div>
-                    <h3 class="text-xl font-bold hind-siliguri">বা: ও বিশ্বপরিচয়</h3>
-                    <p class="text-sm text-slate-500">পূর্ণাঙ্গ মডেল টেস্ট</p>
+                <div class="subject-card bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 relative overflow-hidden flex flex-col" onclick="selectSubject('bd.json', 'bgs')">
+                    <div id="lock-bgs" class="absolute top-6 right-6"></div>
+                    <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-6 font-black text-xl">GS</div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-1 hind-siliguri">বা: ও বিশ্বপরিচয়</h3>
+                    <p class="text-sm text-slate-400 font-medium">Complete Model Test</p>
+                    <div class="mt-8 flex items-center text-orange-600 font-bold text-sm">
+                        Open Test <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Setup View -->
-        <div id="setup-view" class="paper-container py-8 hidden">
-            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl max-w-lg mx-auto">
-                <button onclick="showHome()" class="mb-6 text-sm text-blue-600 font-bold flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 12H1"/><polyline points="8 19 1 12 8 5"/></svg> Back
+        <div id="setup-view" class="paper-container py-12 hidden">
+            <div class="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-2xl max-w-lg mx-auto">
+                <button onclick="showHome()" class="mb-8 text-xs text-slate-400 hover:text-slate-900 font-bold flex items-center gap-1 uppercase tracking-widest">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M11 1L3 8l8 7"/></svg> Change Subject
                 </button>
-                <h2 id="setup-title" class="text-2xl font-extrabold mb-8 text-center academic-serif">Exam Settings</h2>
-                <div class="space-y-6">
-                    <div>
-                        <div class="flex justify-between mb-2"><label class="text-sm font-bold">Target Marks</label><span id="marks-badge" class="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs">100</span></div>
-                        <input type="range" id="marks-slider" min="10" max="100" step="5" value="100" oninput="document.getElementById('marks-badge').innerText = this.value" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                
+                <h2 id="setup-title" class="text-3xl font-black mb-2 text-slate-900 academic-serif text-center">Customize Exam</h2>
+                <p class="text-center text-slate-400 text-sm mb-10">Configure your test parameters below.</p>
+
+                <div class="space-y-8">
+                    <div class="bg-slate-50 p-6 rounded-3xl">
+                        <div class="flex justify-between items-end mb-4">
+                            <label class="text-xs font-black uppercase text-slate-400 tracking-wider">Total Paper Marks</label>
+                            <span id="marks-badge" class="text-3xl font-black text-blue-600">100</span>
+                        </div>
+                        <input type="range" id="marks-slider" min="10" max="100" step="5" value="100" oninput="document.getElementById('marks-badge').innerText = this.value" class="w-full h-3 bg-slate-200 rounded-full appearance-none cursor-pointer accent-blue-600">
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">
-                        <input type="checkbox" id="timer-toggle" checked class="w-5 h-5 accent-blue-600">
-                        <label for="timer-toggle" class="text-sm font-bold">Enable Exam Timer</label>
+
+                    <div class="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-transparent hover:border-slate-200 transition-all cursor-pointer" onclick="document.getElementById('timer-toggle').click()">
+                        <div>
+                            <span class="block text-sm font-bold text-slate-900">Live Exam Timer</span>
+                            <span class="text-xs text-slate-400">Auto-calculate based on marks</span>
+                        </div>
+                        <input type="checkbox" id="timer-toggle" checked class="w-6 h-6 accent-blue-600">
                     </div>
-                    <button onclick="startExamProcess()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition">Start Exam</button>
+
+                    <button onclick="startExamProcess()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-[1.5rem] font-black text-lg shadow-xl shadow-blue-100 active:scale-95 transition-all">
+                        START EXAMINATION
+                    </button>
                 </div>
             </div>
         </div>
@@ -166,10 +270,10 @@
         <!-- Paper View -->
         <div id="paper-view" class="paper-container hidden">
             <div class="paper" id="paper-content"></div>
-            <div class="no-print mt-8 flex justify-center pb-12">
-                <button onclick="showHome()" class="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-bold px-6 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-                    Finish & Back Home
+            <div class="no-print mt-12 flex justify-center pb-20">
+                <button onclick="showHome()" class="flex items-center gap-3 bg-white border border-slate-200 text-slate-900 font-bold px-10 py-4 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                    Finish and Exit
                 </button>
             </div>
         </div>
@@ -186,7 +290,8 @@
         let timerInterval = null;
 
         function toggleModal(id, show) {
-            document.getElementById(id).classList.toggle('hidden', !show);
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden', !show);
         }
 
         function showHome() {
@@ -194,6 +299,7 @@
             document.getElementById('setup-view').classList.add('hidden');
             document.getElementById('paper-view').classList.add('hidden');
             document.getElementById('timer-display').classList.add('hidden');
+            document.body.style.background = "#f8fafc";
             clearInterval(timerInterval);
             updateLockUI();
         }
@@ -204,8 +310,8 @@
                 const el = document.getElementById('lock-' + key);
                 if (el) {
                     el.innerHTML = isUnlocked ? 
-                        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-500"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3m-3-3l-2.25-2.25"></path></svg>' : 
-                        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-300"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+                        '<div class="flex items-center justify-center w-8 h-8 bg-emerald-100 text-emerald-600 rounded-xl shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>' : 
+                        '<div class="flex items-center justify-center w-8 h-8 bg-slate-100 text-slate-400 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>';
                 }
             });
         }
@@ -225,8 +331,9 @@
                 
                 document.getElementById('home-view').classList.add('hidden');
                 document.getElementById('setup-view').classList.remove('hidden');
+                document.body.style.background = "#ffffff";
             } catch (e) {
-                alert("Subject data file (" + file + ") not found in directory.");
+                alert("Subject file not found. Ensure " + file + " is in the folder.");
             }
         }
 
@@ -247,7 +354,7 @@
             } else {
                 const err = document.getElementById('password-error');
                 err.classList.remove('hidden');
-                setTimeout(() => err.classList.add('hidden'), 2000);
+                setTimeout(() => err.classList.add('hidden'), 3000);
             }
         }
 
@@ -256,6 +363,7 @@
             const useTimer = document.getElementById('timer-toggle').checked;
             document.getElementById('setup-view').classList.add('hidden');
             document.getElementById('paper-view').classList.remove('hidden');
+            document.body.style.background = "#f1f5f9";
             if (useTimer) startTimer();
             renderPaper(target);
             window.scrollTo(0,0);
@@ -276,114 +384,104 @@
 
         function renderPaper(target) {
             const container = document.getElementById('paper-content');
-            let currentMarksTotal = 0;
-            const isBengaliSubject = (activeSubjectKey === 'science' || activeSubjectKey === 'bgs');
+            let currentTotal = 0;
             
-            // Re-map questions based on structure
-            let sections = [];
+            // Core Logic: Building filtered lists
+            let filteredSections = [];
             if (currentData.full_exam) {
-                // English MQ structure
-                sections = currentData.full_exam.map(sec => ({
-                    passage: sec.passage,
+                filteredSections = currentData.full_exam.map(sec => ({
+                    ...sec,
                     questions: sec.questions.filter(q => {
                         const m = q.marks || MARKS_MAP[q.id] || 0;
-                        if (currentMarksTotal + m <= target) {
-                            currentMarksTotal += m;
-                            return true;
-                        }
+                        if (currentTotal + m <= target) { currentTotal += m; return true; }
                         return false;
                     })
                 })).filter(s => s.questions.length > 0);
             } else if (currentData.questions) {
-                // Bengali Science/BGS structure
-                sections = [{
+                filteredSections = [{
                     questions: currentData.questions.filter(q => {
-                        // For these, either take full item set or calculate based on children
                         let m = q.marks || 0;
                         if (!m && q.type === 'mcq') m = q.items.length;
                         if (!m && q.type === 'fill_in_the_blanks') m = q.items.length;
                         if (!m && q.type === 'short_answer') m = q.items.length * (q.marks_per_item || 2);
                         if (!m && q.type === 'descriptive') m = q.items.reduce((acc, it) => acc + (it.marks || 6), 0);
-
-                        if (currentMarksTotal + m <= target) {
-                            currentMarksTotal += m;
-                            return true;
-                        }
+                        if (currentTotal + m <= target) { currentTotal += m; return true; }
                         return false;
                     })
                 }];
             }
 
             let html = `
-                <div class="watermark">Practice Mode</div>
+                <div class="watermark">OFFICIAL EXAM</div>
                 <div class="header-top">
-                    <h1 class="academic-serif text-2xl md:text-3xl font-bold uppercase tracking-tight">${currentData.subject}</h1>
-                    <p class="italic text-sm mt-2 text-slate-600">Class: ${currentData.class} | Exam Paper for Practice</p>
+                    <h1 class="academic-serif text-3xl font-black uppercase tracking-tight">${currentData.subject}</h1>
+                    <p class="font-bold text-sm mt-3 text-slate-800 uppercase tracking-widest">Model Question Evaluation - Class ${currentData.class}</p>
                 </div>
                 <div class="exam-info-grid">
-                    <div>Time: ${currentMarksTotal < 50 ? '1 Hour 30 Mins' : currentData.time}</div>
-                    <div class="text-right">Full Marks: ${currentMarksTotal}</div>
+                    <div>Time: ${currentTotal < 50 ? '1 Hour 30 Mins' : currentData.time || '2 Hours 30 Mins'}</div>
+                    <div class="text-right">Total Marks: ${currentTotal}</div>
                 </div>
-                <div class="mb-10 text-center font-bold text-xs border border-black p-2 bg-slate-50">
-                    [নির্দেশানুসারে সকল প্রশ্নের উত্তর দাও। ডান পাশের সংখ্যা প্রশ্নের পূর্ণমান জ্ঞাপক]
+                <div class="mb-12 text-center font-black text-[10px] border-2 border-black p-3 uppercase tracking-tighter">
+                    [Answer the questions as instructed. Figures in the right-hand margin indicate full marks]
                 </div>
             `;
 
-            sections.forEach(sec => {
+            filteredSections.forEach(sec => {
                 if (sec.passage) {
-                    html += `<div class="passage-text mb-10 p-5 bg-slate-50 border-l-4 border-slate-900 hind-siliguri italic">${sec.passage}</div>`;
+                    html += `<div class="passage-text mb-12 p-8 bg-slate-50 border-y border-slate-200 hind-siliguri leading-relaxed">${sec.passage}</div>`;
                 }
                 
                 sec.questions.forEach(q => {
-                    const marks = q.marks || (q.type === 'mcq' ? q.items.length : (q.type === 'short_answer' ? q.items.length * (q.marks_per_item || 2) : ''));
+                    const marks = q.marks || (q.type === 'mcq' ? q.items.length : (q.type === 'short_answer' ? q.items.length * (q.marks_per_item || 2) : (q.marks_per_item * q.items.length)));
                     
                     html += `<div class="question-block">
-                        <span class="marks no-print">[${marks}]</span>
-                        <span class="instr font-bold hind-siliguri text-lg"><span class="mr-2">${q.id || ''}</span> ${q.instruction || ''}</span>`;
+                        <span class="marks-tag no-print">${marks}</span>
+                        <span class="instr-text hind-siliguri"><span class="mr-3">${q.id || ''}</span> ${q.instruction || ''}</span>`;
                     
                     if (q.type === 'mcq') {
-                        html += `<div class="mt-4 space-y-4">`;
+                        html += `<div class="space-y-6 mt-6">`;
                         q.items.forEach((it, idx) => {
-                            html += `<div class="ml-6">
-                                <p class="font-semibold hind-siliguri">${(idx + 1)}. ${it.q || it}</p>
-                                <div class="mcq-grid ml-4 mt-1 text-sm hind-siliguri">
+                            html += `<div class="ml-8">
+                                <p class="font-bold hind-siliguri text-slate-900">${(idx + 1)}. ${it.q || it}</p>
+                                <div class="mcq-option-grid ml-4 mt-2 text-sm hind-siliguri font-medium">
                                     ${(it.options || []).map((o, i) => `<span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>`).join('')}
                                 </div>
                             </div>`;
                         });
                         html += `</div>`;
                     } else if (q.type === 'fill_in_the_blanks') {
-                        html += `<ul class="ml-10 mt-3 space-y-3 text-base hind-siliguri">
+                        html += `<ul class="ml-12 mt-4 space-y-4 text-[1.05rem] font-medium hind-siliguri">
                             ${q.items.map(it => `<li>${it}</li>`).join('')}
                         </ul>`;
                     } else if (q.type === 'short_answer') {
-                        html += `<ul class="ml-10 mt-3 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3 text-base hind-siliguri">
+                        html += `<ul class="ml-12 mt-4 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 text-[1.05rem] font-medium hind-siliguri">
                             ${q.items.map(it => `<li>${it}</li>`).join('')}
                         </ul>`;
                     } else if (q.type === 'descriptive') {
-                        html += `<div class="mt-4 space-y-6">`;
+                        html += `<div class="mt-6 space-y-8">`;
                         q.items.forEach((it, idx) => {
-                            html += `<div class="ml-6 relative">
-                                <span class="absolute -left-8 font-bold">(${['ক','খ','গ','ঘ','ঙ'][idx]})</span>
-                                <p class="hind-siliguri text-base">${it.q || it}</p>
-                                <span class="marks text-xs italic opacity-50 no-print block text-right mt-1">${it.marks || 6}</span>
+                            html += `<div class="ml-10 relative">
+                                <span class="absolute -left-10 font-bold">(${['ক','খ','গ','ঘ','ঙ','চ','ছ','জ'][idx]})</span>
+                                <p class="hind-siliguri text-[1.05rem] font-medium">${it.q || it}</p>
+                                <span class="no-print block text-right mt-1 text-[10px] font-black uppercase text-slate-400">Section Marks: ${it.marks || 6}</span>
                             </div>`;
                         });
                         html += `</div>`;
                     } else if (q.type === 'matching') {
-                        html += `<div class="overflow-x-auto mt-4">
+                        html += `<div class="overflow-x-auto mt-6">
                             <table>
-                                <thead><tr><th>Column A</th><th>Column B</th></tr></thead>
+                                <thead class="bg-slate-50"><tr><th>Column A</th><th>Column B</th></tr></thead>
                                 <tbody>
-                                    ${q.columnA.map((colA, i) => `<tr><td>${String.fromCharCode(97+i)}) ${colA}</td><td>${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td></tr>`).join('')}
+                                    ${q.columnA.map((colA, i) => `<tr><td class="font-bold text-sm">${String.fromCharCode(97+i)}) ${colA}</td><td class="text-sm">${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td></tr>`).join('')}
                                 </tbody>
                             </table>
                         </div>`;
                     } else if (q.items && typeof q.items[0] === 'string') {
-                        // General string list
-                        html += `<ul class="ml-10 mt-3 space-y-3 text-base hind-siliguri list-decimal">
+                        html += `<ul class="ml-12 mt-4 space-y-4 text-[1.05rem] font-medium hind-siliguri list-decimal">
                             ${q.items.map(it => `<li>${it}</li>`).join('')}
                         </ul>`;
+                    } else if (q.text) {
+                        html += `<div class="mt-4 ml-12 p-6 bg-slate-50 border rounded-2xl italic academic-serif leading-relaxed text-slate-700">${q.text}</div>`;
                     }
                     
                     html += `</div>`;
