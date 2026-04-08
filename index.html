@@ -26,7 +26,7 @@
             .paper { padding: 4rem 5rem; border-radius: 0; min-height: 297mm; }
         }
 
-        .category-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .category-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; }
         .category-card:hover { transform: translateY(-5px); }
 
         .header-top { text-align: center; border-bottom: 3px double #000; padding-bottom: 1.5rem; margin-bottom: 2rem; }
@@ -44,10 +44,24 @@
             .paper-container { padding: 0; margin: 0; max-width: none; }
             .paper { box-shadow: none; padding: 0; border-radius: 0; width: 100%; }
             .no-print { display: none !important; }
-            .marks { background: transparent; padding: 0; }
+            .marks { background: transparent; padding: 0; border: none; }
         }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+        
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 6rem;
+            font-weight: 900;
+            color: rgba(0,0,0,0.02);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 0;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -85,10 +99,13 @@
     <nav class="no-print sticky top-0 bg-slate-900 text-white p-4 z-50 flex items-center justify-between shadow-lg md:px-8">
         <div class="flex items-center gap-2 cursor-pointer" onclick="showHome()">
             <div class="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center font-black">E</div>
-            <h1 class="font-bold tracking-tight">EXAMPRO</h1>
+            <h1 class="font-bold tracking-tight uppercase">ExamPro</h1>
         </div>
         <div class="flex items-center gap-3">
             <div id="timer-display" class="hidden font-mono bg-slate-800 px-3 py-1 rounded-full text-blue-400 text-sm border border-slate-700">00:00:00</div>
+            <button onclick="window.print()" class="p-2 hover:bg-slate-800 rounded-full transition text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            </button>
             <button onclick="toggleModal('info-modal', true)" class="p-2 hover:bg-slate-800 rounded-full transition text-blue-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </button>
@@ -102,22 +119,22 @@
             <h2 class="text-2xl font-extrabold text-slate-800 mb-6 px-2">Subjects</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- English -->
-                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden" onclick="selectSubject('mq.json', 'english')">
-                    <div id="lock-english" class="absolute top-4 right-4 text-slate-300"></div>
+                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200" onclick="selectSubject('mq.json', 'english')">
+                    <div id="lock-english" class="absolute top-4 right-4"></div>
                     <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 font-bold">EN</div>
                     <h3 class="text-xl font-bold">English</h3>
                     <p class="text-sm text-slate-500">Model Question 02</p>
                 </div>
                 <!-- Science -->
-                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden" onclick="selectSubject('biggan.json', 'science')">
-                    <div id="lock-science" class="absolute top-4 right-4 text-slate-300"></div>
+                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200" onclick="selectSubject('biggan.json', 'science')">
+                    <div id="lock-science" class="absolute top-4 right-4"></div>
                     <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4 font-bold">বিজ্ঞান</div>
                     <h3 class="text-xl font-bold hind-siliguri">প্রাথমিক বিজ্ঞান</h3>
                     <p class="text-sm text-slate-500">অধ্যায় ভিত্তিক মূল্যায়ন</p>
                 </div>
                 <!-- BGS -->
-                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden" onclick="selectSubject('bd.json', 'bgs')">
-                    <div id="lock-bgs" class="absolute top-4 right-4 text-slate-300"></div>
+                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200" onclick="selectSubject('bd.json', 'bgs')">
+                    <div id="lock-bgs" class="absolute top-4 right-4"></div>
                     <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4 font-bold">বি.বি</div>
                     <h3 class="text-xl font-bold hind-siliguri">বা: ও বিশ্বপরিচয়</h3>
                     <p class="text-sm text-slate-500">পূর্ণাঙ্গ মডেল টেস্ট</p>
@@ -131,7 +148,7 @@
                 <button onclick="showHome()" class="mb-6 text-sm text-blue-600 font-bold flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 12H1"/><polyline points="8 19 1 12 8 5"/></svg> Back
                 </button>
-                <h2 id="setup-title" class="text-2xl font-extrabold mb-8 text-center">Exam Settings</h2>
+                <h2 id="setup-title" class="text-2xl font-extrabold mb-8 text-center academic-serif">Exam Settings</h2>
                 <div class="space-y-6">
                     <div>
                         <div class="flex justify-between mb-2"><label class="text-sm font-bold">Target Marks</label><span id="marks-badge" class="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs">100</span></div>
@@ -139,7 +156,7 @@
                     </div>
                     <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">
                         <input type="checkbox" id="timer-toggle" checked class="w-5 h-5 accent-blue-600">
-                        <label for="timer-toggle" class="text-sm font-bold">Enable Timer</label>
+                        <label for="timer-toggle" class="text-sm font-bold">Enable Exam Timer</label>
                     </div>
                     <button onclick="startExamProcess()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition">Start Exam</button>
                 </div>
@@ -149,6 +166,12 @@
         <!-- Paper View -->
         <div id="paper-view" class="paper-container hidden">
             <div class="paper" id="paper-content"></div>
+            <div class="no-print mt-8 flex justify-center pb-12">
+                <button onclick="showHome()" class="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-bold px-6 py-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Finish & Back Home
+                </button>
+            </div>
         </div>
 
     </main>
@@ -179,9 +202,11 @@
             ['english', 'science', 'bgs'].forEach(key => {
                 const isUnlocked = localStorage.getItem('unlocked_' + key);
                 const el = document.getElementById('lock-' + key);
-                el.innerHTML = isUnlocked ? 
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-500"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' : 
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+                if (el) {
+                    el.innerHTML = isUnlocked ? 
+                        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-500"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3m-3-3l-2.25-2.25"></path></svg>' : 
+                        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-300"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+                }
             });
         }
 
@@ -190,16 +215,18 @@
             activeSubjectKey = key;
             try {
                 const res = await fetch(file);
+                if (!res.ok) throw new Error();
                 currentData = await res.json();
                 document.getElementById('setup-title').innerText = currentData.subject;
-                document.getElementById('marks-slider').max = currentData.full_marks || 100;
-                document.getElementById('marks-slider').value = currentData.full_marks || 100;
-                document.getElementById('marks-badge').innerText = document.getElementById('marks-slider').value;
+                const maxMarks = currentData.full_marks || 100;
+                document.getElementById('marks-slider').max = maxMarks;
+                document.getElementById('marks-slider').value = maxMarks;
+                document.getElementById('marks-badge').innerText = maxMarks;
                 
                 document.getElementById('home-view').classList.add('hidden');
                 document.getElementById('setup-view').classList.remove('hidden');
             } catch (e) {
-                alert("File not found: " + file);
+                alert("Subject data file (" + file + ") not found in directory.");
             }
         }
 
@@ -218,7 +245,9 @@
                 toggleModal('password-modal', false);
                 runExam();
             } else {
-                document.getElementById('password-error').classList.remove('hidden');
+                const err = document.getElementById('password-error');
+                err.classList.remove('hidden');
+                setTimeout(() => err.classList.add('hidden'), 2000);
             }
         }
 
@@ -247,51 +276,116 @@
 
         function renderPaper(target) {
             const container = document.getElementById('paper-content');
-            let total = 0;
-            const filtered = [];
+            let currentMarksTotal = 0;
+            const isBengaliSubject = (activeSubjectKey === 'science' || activeSubjectKey === 'bgs');
             
-            currentData.full_exam?.forEach(sec => {
-                const newSec = { ...sec, questions: [] };
-                sec.questions.forEach(q => {
-                    const m = q.marks || MARKS_MAP[q.id] || 2;
-                    if (total + m <= target) { newSec.questions.push(q); total += m; }
-                });
-                if (newSec.questions.length > 0) filtered.push(newSec);
-            });
+            // Re-map questions based on structure
+            let sections = [];
+            if (currentData.full_exam) {
+                // English MQ structure
+                sections = currentData.full_exam.map(sec => ({
+                    passage: sec.passage,
+                    questions: sec.questions.filter(q => {
+                        const m = q.marks || MARKS_MAP[q.id] || 0;
+                        if (currentMarksTotal + m <= target) {
+                            currentMarksTotal += m;
+                            return true;
+                        }
+                        return false;
+                    })
+                })).filter(s => s.questions.length > 0);
+            } else if (currentData.questions) {
+                // Bengali Science/BGS structure
+                sections = [{
+                    questions: currentData.questions.filter(q => {
+                        // For these, either take full item set or calculate based on children
+                        let m = q.marks || 0;
+                        if (!m && q.type === 'mcq') m = q.items.length;
+                        if (!m && q.type === 'fill_in_the_blanks') m = q.items.length;
+                        if (!m && q.type === 'short_answer') m = q.items.length * (q.marks_per_item || 2);
+                        if (!m && q.type === 'descriptive') m = q.items.reduce((acc, it) => acc + (it.marks || 6), 0);
 
-            // Handling science.json/bgs.json structure difference if applicable
-            const examList = currentData.questions || filtered; 
+                        if (currentMarksTotal + m <= target) {
+                            currentMarksTotal += m;
+                            return true;
+                        }
+                        return false;
+                    })
+                }];
+            }
 
             let html = `
+                <div class="watermark">Practice Mode</div>
                 <div class="header-top">
-                    <h1 class="academic-serif text-2xl font-bold uppercase">${currentData.subject}</h1>
-                    <p class="italic text-sm mt-2">Class: ${currentData.class} | Set: ${currentData.model_id || 'A'}</p>
+                    <h1 class="academic-serif text-2xl md:text-3xl font-bold uppercase tracking-tight">${currentData.subject}</h1>
+                    <p class="italic text-sm mt-2 text-slate-600">Class: ${currentData.class} | Exam Paper for Practice</p>
                 </div>
                 <div class="exam-info-grid">
-                    <div>Time: ${target < 50 ? '1 Hour' : currentData.time}</div>
-                    <div class="text-right">Marks: ${total || currentData.full_marks}</div>
+                    <div>Time: ${currentMarksTotal < 50 ? '1 Hour 30 Mins' : currentData.time}</div>
+                    <div class="text-right">Full Marks: ${currentMarksTotal}</div>
+                </div>
+                <div class="mb-10 text-center font-bold text-xs border border-black p-2 bg-slate-50">
+                    [নির্দেশানুসারে সকল প্রশ্নের উত্তর দাও। ডান পাশের সংখ্যা প্রশ্নের পূর্ণমান জ্ঞাপক]
                 </div>
             `;
 
-            const loopData = currentData.questions || filtered;
-            loopData.forEach(item => {
-                const questions = item.questions || [item];
-                if (item.passage) html += `<div class="passage-text mb-6 p-4 bg-slate-50 rounded-xl hind-siliguri">${item.passage}</div>`;
+            sections.forEach(sec => {
+                if (sec.passage) {
+                    html += `<div class="passage-text mb-10 p-5 bg-slate-50 border-l-4 border-slate-900 hind-siliguri italic">${sec.passage}</div>`;
+                }
                 
-                questions.forEach(q => {
-                    const marksVal = q.marks || MARKS_MAP[q.id] || q.marks_per_item || '';
-                    html += `<div class="question-block">
-                        <span class="marks">[${marksVal}]</span>
-                        <span class="instr font-bold hind-siliguri">${q.id || ''} ${q.instruction || ''}</span>`;
+                sec.questions.forEach(q => {
+                    const marks = q.marks || (q.type === 'mcq' ? q.items.length : (q.type === 'short_answer' ? q.items.length * (q.marks_per_item || 2) : ''));
                     
-                    if (q.items) {
-                        html += `<ul class="ml-8 mt-2 space-y-2 text-sm hind-siliguri">
-                            ${q.items.map(it => typeof it === 'string' ? `<li>${it}</li>` : `<li>${it.q} <div class="mcq-grid mt-1">${it.options.map((o,i)=>`<span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>`).join('')}</div></li>`).join('')}
+                    html += `<div class="question-block">
+                        <span class="marks no-print">[${marks}]</span>
+                        <span class="instr font-bold hind-siliguri text-lg"><span class="mr-2">${q.id || ''}</span> ${q.instruction || ''}</span>`;
+                    
+                    if (q.type === 'mcq') {
+                        html += `<div class="mt-4 space-y-4">`;
+                        q.items.forEach((it, idx) => {
+                            html += `<div class="ml-6">
+                                <p class="font-semibold hind-siliguri">${(idx + 1)}. ${it.q || it}</p>
+                                <div class="mcq-grid ml-4 mt-1 text-sm hind-siliguri">
+                                    ${(it.options || []).map((o, i) => `<span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>`).join('')}
+                                </div>
+                            </div>`;
+                        });
+                        html += `</div>`;
+                    } else if (q.type === 'fill_in_the_blanks') {
+                        html += `<ul class="ml-10 mt-3 space-y-3 text-base hind-siliguri">
+                            ${q.items.map(it => `<li>${it}</li>`).join('')}
                         </ul>`;
-                    } else if (q.q) {
-                        html += `<p class="ml-8 mt-1 text-sm hind-siliguri">${q.q}</p>`;
-                        if (q.options) html += `<div class="mcq-grid ml-8 mt-1 text-sm hind-siliguri">${q.options.map((o,i)=>`<span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>`).join('')}</div>`;
+                    } else if (q.type === 'short_answer') {
+                        html += `<ul class="ml-10 mt-3 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3 text-base hind-siliguri">
+                            ${q.items.map(it => `<li>${it}</li>`).join('')}
+                        </ul>`;
+                    } else if (q.type === 'descriptive') {
+                        html += `<div class="mt-4 space-y-6">`;
+                        q.items.forEach((it, idx) => {
+                            html += `<div class="ml-6 relative">
+                                <span class="absolute -left-8 font-bold">(${['ক','খ','গ','ঘ','ঙ'][idx]})</span>
+                                <p class="hind-siliguri text-base">${it.q || it}</p>
+                                <span class="marks text-xs italic opacity-50 no-print block text-right mt-1">${it.marks || 6}</span>
+                            </div>`;
+                        });
+                        html += `</div>`;
+                    } else if (q.type === 'matching') {
+                        html += `<div class="overflow-x-auto mt-4">
+                            <table>
+                                <thead><tr><th>Column A</th><th>Column B</th></tr></thead>
+                                <tbody>
+                                    ${q.columnA.map((colA, i) => `<tr><td>${String.fromCharCode(97+i)}) ${colA}</td><td>${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td></tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>`;
+                    } else if (q.items && typeof q.items[0] === 'string') {
+                        // General string list
+                        html += `<ul class="ml-10 mt-3 space-y-3 text-base hind-siliguri list-decimal">
+                            ${q.items.map(it => `<li>${it}</li>`).join('')}
+                        </ul>`;
                     }
+                    
                     html += `</div>`;
                 });
             });
