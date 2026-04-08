@@ -5,136 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ExamPro - Primary Education Portal</title>
     
-    <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2232/2232688.png">
 
-    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --paper-bg: #ffffff;
-            --text-main: #000000;
-            --brand-primary: #0f172a;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: var(--text-main);
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        :root { --paper-bg: #ffffff; --text-main: #000000; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: var(--text-main); -webkit-tap-highlight-color: transparent; }
         .academic-serif { font-family: 'Lora', serif; }
         .hind-siliguri { font-family: 'Hind Siliguri', sans-serif; }
         
-        .paper-container {
-            transition: all 0.3s ease;
-            width: 100%;
-            max-width: 850px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
+        .paper-container { max-width: 850px; margin: 0 auto; padding: 1rem; }
+        .paper { background: var(--paper-bg); width: 100%; padding: 2rem 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); min-height: 100vh; position: relative; line-height: 1.6; border-radius: 0.5rem; }
+        
         @media (min-width: 768px) {
-            .paper-container { padding: 2rem; }
+            .paper { padding: 4rem 5rem; border-radius: 0; min-height: 297mm; }
         }
 
-        .paper {
-            background: var(--paper-bg);
-            width: 100%;
-            padding: 2rem 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            min-height: 100vh;
-            position: relative;
-            line-height: 1.6;
-            border-radius: 0.5rem;
-        }
+        .category-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .category-card:hover { transform: translateY(-5px); }
 
-        @media (min-width: 768px) {
-            .paper {
-                padding: 4rem 5rem;
-                border-radius: 0;
-                min-height: 297mm;
-            }
-        }
-
-        .dashboard-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-        }
-
-        .header-top {
-            text-align: center;
-            border-bottom: 3px double #000;
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .exam-info-grid {
-            display: grid;
-            grid-template-cols: 1fr 1fr;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #000;
-            padding-bottom: 0.5rem;
-        }
-
-        .passage-text {
-            font-family: 'Lora', serif;
-            font-size: 1.05rem;
-            line-height: 1.8;
-            text-align: justify;
-        }
-
-        .question-block {
-            margin-bottom: 2rem;
-            position: relative;
-            clear: both;
-        }
-
-        .marks {
-            float: right;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #444;
-            background: #f1f5f9;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-        }
-
-        th, td {
-            border: 1px solid #000;
-            padding: 8px 12px;
-            vertical-align: top;
-        }
-
-        .mcq-grid {
-            display: grid;
-            grid-template-cols: 1fr;
-            gap: 0.25rem;
-            margin-top: 0.5rem;
-        }
-
-        @media (min-width: 480px) {
-            .mcq-grid { grid-template-cols: 1fr 1fr; }
-        }
+        .header-top { text-align: center; border-bottom: 3px double #000; padding-bottom: 1.5rem; margin-bottom: 2rem; }
+        .exam-info-grid { display: grid; grid-template-cols: 1fr 1fr; font-weight: 600; font-size: 0.85rem; margin-bottom: 2rem; border-bottom: 1px solid #000; padding-bottom: 0.5rem; }
+        .passage-text { font-family: 'Lora', serif; font-size: 1.05rem; line-height: 1.8; text-align: justify; }
+        .question-block { margin-bottom: 2rem; position: relative; clear: both; }
+        .marks { float: right; font-weight: 700; font-size: 0.9rem; color: #444; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+        th, td { border: 1px solid #000; padding: 8px 12px; vertical-align: top; }
+        .mcq-grid { display: grid; grid-template-cols: 1fr; gap: 0.25rem; margin-top: 0.5rem; }
+        @media (min-width: 480px) { .mcq-grid { grid-template-cols: 1fr 1fr; } }
 
         @media print {
             body { background: white; }
@@ -142,136 +45,103 @@
             .paper { box-shadow: none; padding: 0; border-radius: 0; width: 100%; }
             .no-print { display: none !important; }
             .marks { background: transparent; padding: 0; }
-            .page-break { page-break-before: always; }
         }
 
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 6rem;
-            font-weight: 900;
-            color: rgba(0,0,0,0.02);
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 0;
-            text-transform: uppercase;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-blur: 4px;
-            z-index: 200;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Developer Info Modal -->
+    <!-- Info Modal -->
     <div id="info-modal" class="no-print hidden modal-overlay">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center transform transition-all scale-95 opacity-0 duration-300" id="info-modal-content">
-            <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
+            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </div>
-            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Developer Information</h3>
-            <p class="text-slate-600 leading-relaxed">
-                Developed By <span class="font-bold text-blue-600">MD.MIZANUR ISLAM</span> for take the test of his dear student.
-            </p>
-            <button onclick="toggleInfoModal(false)" class="mt-8 w-full bg-slate-900 text-white py-3 rounded-2xl font-bold hover:bg-slate-800 transition">Close</button>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Developer Info</h3>
+            <p class="text-slate-600">Developed By <span class="font-bold text-blue-600">MD.MIZANUR ISLAM</span> for take the test of his dear student.</p>
+            <button onclick="toggleModal('info-modal', false)" class="mt-8 w-full bg-slate-900 text-white py-3 rounded-2xl font-bold">Close</button>
         </div>
     </div>
 
-    <!-- Password Lock Modal -->
+    <!-- Password Modal -->
     <div id="password-modal" class="no-print hidden modal-overlay">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center">
             <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
-            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Access Locked</h3>
-            <p class="text-slate-500 text-sm mb-6">Please enter the security password to begin your examination.</p>
-            <input type="password" id="exam-password" placeholder="Enter Password" class="w-full px-4 py-3 border-2 border-slate-100 rounded-2xl mb-4 focus:border-blue-500 outline-none text-center font-bold">
-            <p id="password-error" class="text-red-500 text-xs mb-4 hidden font-bold">Invalid password. Try again.</p>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Unlock Exam</h3>
+            <p class="text-slate-500 text-sm mb-6">Enter password to unlock this subject permanently.</p>
+            <input type="password" id="exam-password" placeholder="Password" class="w-full px-4 py-3 border-2 border-slate-100 rounded-2xl mb-2 focus:border-blue-500 outline-none text-center font-bold">
+            <p id="password-error" class="text-red-500 text-xs mb-4 hidden">Incorrect password.</p>
             <div class="flex gap-3">
-                <button onclick="togglePasswordModal(false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-2xl font-bold">Cancel</button>
-                <button onclick="verifyPassword()" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-200">Unlock</button>
+                <button onclick="toggleModal('password-modal', false)" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-2xl font-bold">Cancel</button>
+                <button onclick="verifyPassword()" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-bold">Unlock</button>
             </div>
         </div>
     </div>
 
-    <!-- PWA Installer Banner -->
-    <div id="pwa-banner" class="no-print hidden fixed bottom-4 left-4 right-4 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl z-[100] flex items-center justify-between border border-slate-700">
-        <div class="flex items-center gap-3">
-            <div class="bg-blue-500 p-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-            </div>
-            <div>
-                <p class="font-bold text-sm">Install ExamPro</p>
-                <p class="text-xs text-slate-400">Offline access enabled</p>
-            </div>
-        </div>
-        <button onclick="triggerPWAInstall()" class="bg-blue-600 px-4 py-2 rounded-xl text-sm font-bold">Install</button>
-    </div>
-
-    <!-- Mobile Navigation -->
+    <!-- Navigation -->
     <nav class="no-print sticky top-0 bg-slate-900 text-white p-4 z-50 flex items-center justify-between shadow-lg md:px-8">
-        <div class="flex items-center gap-2">
-            <div class="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center font-black italic">E</div>
-            <h1 class="font-bold tracking-tight">EXAMPRO <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded ml-1 text-slate-400">v2.0</span></h1>
+        <div class="flex items-center gap-2 cursor-pointer" onclick="showHome()">
+            <div class="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center font-black">E</div>
+            <h1 class="font-bold tracking-tight">EXAMPRO</h1>
         </div>
         <div class="flex items-center gap-3">
             <div id="timer-display" class="hidden font-mono bg-slate-800 px-3 py-1 rounded-full text-blue-400 text-sm border border-slate-700">00:00:00</div>
-            
-            <button onclick="toggleInfoModal(true)" class="p-2 hover:bg-slate-800 rounded-full transition text-blue-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            </button>
-
-            <button onclick="window.print()" class="p-2 hover:bg-slate-800 rounded-full transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <button onclick="toggleModal('info-modal', true)" class="p-2 hover:bg-slate-800 rounded-full transition text-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </button>
         </div>
     </nav>
 
-    <main id="main-content" class="pb-20">
-        <!-- Setup View -->
-        <div id="setup-view" class="paper-container py-8">
-            <div class="dashboard-card max-w-lg mx-auto">
-                <div class="text-center mb-8">
-                    <div class="inline-block p-4 bg-blue-50 rounded-3xl text-blue-600 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
-                    </div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">Exam Preparation</h2>
-                    <p class="text-slate-500 mt-2">Class Five English Model Question</p>
+    <main class="pb-20">
+        
+        <!-- Home View -->
+        <div id="home-view" class="paper-container py-8">
+            <h2 class="text-2xl font-extrabold text-slate-800 mb-6 px-2">Subjects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- English -->
+                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden" onclick="selectSubject('mq.json', 'english')">
+                    <div id="lock-english" class="absolute top-4 right-4 text-slate-300"></div>
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 font-bold">EN</div>
+                    <h3 class="text-xl font-bold">English</h3>
+                    <p class="text-sm text-slate-500">Model Question 02</p>
                 </div>
+                <!-- Science -->
+                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden" onclick="selectSubject('biggan.json', 'science')">
+                    <div id="lock-science" class="absolute top-4 right-4 text-slate-300"></div>
+                    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4 font-bold">বিজ্ঞান</div>
+                    <h3 class="text-xl font-bold hind-siliguri">প্রাথমিক বিজ্ঞান</h3>
+                    <p class="text-sm text-slate-500">অধ্যায় ভিত্তিক মূল্যায়ন</p>
+                </div>
+                <!-- BGS -->
+                <div class="category-card bg-white p-6 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden" onclick="selectSubject('bd.json', 'bgs')">
+                    <div id="lock-bgs" class="absolute top-4 right-4 text-slate-300"></div>
+                    <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4 font-bold">বি.বি</div>
+                    <h3 class="text-xl font-bold hind-siliguri">বা: ও বিশ্বপরিচয়</h3>
+                    <p class="text-sm text-slate-500">পূর্ণাঙ্গ মডেল টেস্ট</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- Setup View -->
+        <div id="setup-view" class="paper-container py-8 hidden">
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl max-w-lg mx-auto">
+                <button onclick="showHome()" class="mb-6 text-sm text-blue-600 font-bold flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 12H1"/><polyline points="8 19 1 12 8 5"/></svg> Back
+                </button>
+                <h2 id="setup-title" class="text-2xl font-extrabold mb-8 text-center">Exam Settings</h2>
                 <div class="space-y-6">
                     <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="text-sm font-bold text-slate-700">Target Full Marks</label>
-                            <span id="marks-badge" class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold">100 Marks</span>
-                        </div>
-                        <input type="range" id="marks-slider" min="10" max="100" step="5" value="100" 
-                               oninput="document.getElementById('marks-badge').innerText = this.value + ' Marks'"
-                               class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                        <div class="flex justify-between mb-2"><label class="text-sm font-bold">Target Marks</label><span id="marks-badge" class="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs">100</span></div>
+                        <input type="range" id="marks-slider" min="10" max="100" step="5" value="100" oninput="document.getElementById('marks-badge').innerText = this.value" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
                     </div>
-
-                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-4">
-                        <input type="checkbox" id="timer-toggle" checked class="w-5 h-5 rounded accent-blue-600">
-                        <div>
-                            <label for="timer-toggle" class="block text-sm font-bold text-slate-800">Enable Exam Timer</label>
-                            <p class="text-xs text-slate-500">Calculate time based on marks selection</p>
-                        </div>
+                    <div class="p-4 bg-slate-50 rounded-2xl flex items-center gap-4">
+                        <input type="checkbox" id="timer-toggle" checked class="w-5 h-5 accent-blue-600">
+                        <label for="timer-toggle" class="text-sm font-bold">Enable Timer</label>
                     </div>
-
-                    <button onclick="togglePasswordModal(true)" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-blue-200 transition-all active:scale-95">
-                        Start Exam
-                    </button>
+                    <button onclick="startExamProcess()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition">Start Exam</button>
                 </div>
             </div>
         </div>
@@ -279,196 +149,157 @@
         <!-- Paper View -->
         <div id="paper-view" class="paper-container hidden">
             <div class="paper" id="paper-content"></div>
-            <div class="no-print mt-8 flex justify-center pb-12">
-                <button onclick="showSetup()" class="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-bold px-6 py-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-                    Back to Setup
-                </button>
-            </div>
         </div>
+
     </main>
 
     <script>
-        const EXAM_PASSWORD = "mizan@1234";
-        let rawData = null;
+        const PASSWORD = "mizan@1234";
+        const MARKS_MAP = { 1: 5, 2: 5, 3: 10, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5, 11: 5, 12: 10, 13: 10 };
+        
+        let activeFile = '';
+        let activeSubjectKey = '';
+        let currentData = null;
         let timerInterval = null;
-        let secondsElapsed = 0;
-        let deferredPrompt = null;
 
-        // PWA Setup
-        const manifest = {
-            "name": "ExamPro Portal",
-            "short_name": "ExamPro",
-            "start_url": ".",
-            "display": "standalone",
-            "background_color": "#0f172a",
-            "theme_color": "#0f172a",
-            "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/2232/2232688.png", "sizes": "512x512", "type": "image/png"}]
-        };
-        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-        document.head.appendChild(Object.assign(document.createElement('link'), {rel: 'manifest', href: URL.createObjectURL(manifestBlob)}));
-
-        // Installation Logic
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            // Only show banner if not already running as PWA
-            if (!window.matchMedia('(display-mode: standalone)').matches) {
-                document.getElementById('pwa-banner').classList.remove('hidden');
-            }
-        });
-
-        async function triggerPWAInstall() {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                document.getElementById('pwa-banner').classList.add('hidden');
-            }
-            deferredPrompt = null;
+        function toggleModal(id, show) {
+            document.getElementById(id).classList.toggle('hidden', !show);
         }
 
-        // Modal Logic
-        function toggleInfoModal(show) {
-            const modal = document.getElementById('info-modal');
-            const content = document.getElementById('info-modal-content');
-            if (show) {
-                modal.classList.remove('hidden');
-                setTimeout(() => { content.classList.remove('scale-95', 'opacity-0'); content.classList.add('scale-100', 'opacity-100'); }, 10);
+        function showHome() {
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('setup-view').classList.add('hidden');
+            document.getElementById('paper-view').classList.add('hidden');
+            document.getElementById('timer-display').classList.add('hidden');
+            clearInterval(timerInterval);
+            updateLockUI();
+        }
+
+        function updateLockUI() {
+            ['english', 'science', 'bgs'].forEach(key => {
+                const isUnlocked = localStorage.getItem('unlocked_' + key);
+                const el = document.getElementById('lock-' + key);
+                el.innerHTML = isUnlocked ? 
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-500"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' : 
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+            });
+        }
+
+        async function selectSubject(file, key) {
+            activeFile = file;
+            activeSubjectKey = key;
+            try {
+                const res = await fetch(file);
+                currentData = await res.json();
+                document.getElementById('setup-title').innerText = currentData.subject;
+                document.getElementById('marks-slider').max = currentData.full_marks || 100;
+                document.getElementById('marks-slider').value = currentData.full_marks || 100;
+                document.getElementById('marks-badge').innerText = document.getElementById('marks-slider').value;
+                
+                document.getElementById('home-view').classList.add('hidden');
+                document.getElementById('setup-view').classList.remove('hidden');
+            } catch (e) {
+                alert("File not found: " + file);
+            }
+        }
+
+        function startExamProcess() {
+            if (localStorage.getItem('unlocked_' + activeSubjectKey)) {
+                runExam();
             } else {
-                content.classList.add('scale-95', 'opacity-0'); content.classList.remove('scale-100', 'opacity-100');
-                setTimeout(() => { modal.classList.add('hidden'); }, 300);
+                toggleModal('password-modal', true);
             }
-        }
-
-        function togglePasswordModal(show) {
-            const modal = document.getElementById('password-modal');
-            const err = document.getElementById('password-error');
-            const input = document.getElementById('exam-password');
-            err.classList.add('hidden');
-            input.value = "";
-            if (show) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
         }
 
         function verifyPassword() {
             const input = document.getElementById('exam-password').value;
-            const err = document.getElementById('password-error');
-            if (input === EXAM_PASSWORD) {
-                togglePasswordModal(false);
-                generateExam();
+            if (input === PASSWORD) {
+                localStorage.setItem('unlocked_' + activeSubjectKey, 'true');
+                toggleModal('password-modal', false);
+                runExam();
             } else {
-                err.classList.remove('hidden');
+                document.getElementById('password-error').classList.remove('hidden');
             }
         }
 
-        // Exam Engine
-        const MARKS_MAP = { 1: 5, 2: 5, 3: 10, 4: 5, 5: 5, 6: 10, 7: 10, 8: 10, 9: 5, 10: 5, 11: 5, 12: 10, 13: 10 };
-
-        async function init() {
-            try {
-                const res = await fetch('mq.json');
-                rawData = await res.json();
-            } catch (e) {
-                document.getElementById('setup-view').innerHTML = `<div class="text-center p-8 bg-white rounded-3xl border border-red-100"><p class="text-red-500 font-bold">Error: mq.json not found.</p></div>`;
-            }
-        }
-
-        function showSetup() {
-            document.getElementById('setup-view').classList.remove('hidden');
-            document.getElementById('paper-view').classList.add('hidden');
-            document.getElementById('timer-display').classList.add('hidden');
-            clearInterval(timerInterval);
-        }
-
-        function startTimer() {
-            secondsElapsed = 0;
-            const display = document.getElementById('timer-display');
-            display.classList.remove('hidden');
-            timerInterval = setInterval(() => {
-                secondsElapsed++;
-                const h = Math.floor(secondsElapsed / 3600).toString().padStart(2, '0');
-                const m = Math.floor((secondsElapsed % 3600) / 60).toString().padStart(2, '0');
-                const s = (secondsElapsed % 60).toString().padStart(2, '0');
-                display.innerText = `${h}:${m}:${s}`;
-            }, 1000);
-        }
-
-        function generateExam() {
-            if (!rawData) return;
-            const targetMarks = parseInt(document.getElementById('marks-slider').value);
+        function runExam() {
+            const target = parseInt(document.getElementById('marks-slider').value);
             const useTimer = document.getElementById('timer-toggle').checked;
             document.getElementById('setup-view').classList.add('hidden');
             document.getElementById('paper-view').classList.remove('hidden');
             if (useTimer) startTimer();
-            renderPaper(targetMarks);
+            renderPaper(target);
             window.scrollTo(0,0);
+        }
+
+        function startTimer() {
+            let sec = 0;
+            const display = document.getElementById('timer-display');
+            display.classList.remove('hidden');
+            timerInterval = setInterval(() => {
+                sec++;
+                const h = Math.floor(sec/3600).toString().padStart(2,'0');
+                const m = Math.floor((sec%3600)/60).toString().padStart(2,'0');
+                const s = (sec%60).toString().padStart(2,'0');
+                display.innerText = `${h}:${m}:${s}`;
+            }, 1000);
         }
 
         function renderPaper(target) {
             const container = document.getElementById('paper-content');
-            let currentTotal = 0;
-            const examData = JSON.parse(JSON.stringify(rawData));
-            const filteredSections = [];
-            for (const section of examData.full_exam) {
-                const newSection = { ...section, questions: [] };
-                for (const q of section.questions) {
-                    const m = MARKS_MAP[q.id] || 0;
-                    if (currentTotal + m <= target) { newSection.questions.push(q); currentTotal += m; }
-                    if (currentTotal >= target) break;
-                }
-                if (newSection.questions.length > 0) filteredSections.push(newSection);
-                if (currentTotal >= target) break;
-            }
+            let total = 0;
+            const filtered = [];
+            
+            currentData.full_exam?.forEach(sec => {
+                const newSec = { ...sec, questions: [] };
+                sec.questions.forEach(q => {
+                    const m = q.marks || MARKS_MAP[q.id] || 2;
+                    if (total + m <= target) { newSec.questions.push(q); total += m; }
+                });
+                if (newSec.questions.length > 0) filtered.push(newSec);
+            });
+
+            // Handling science.json/bgs.json structure difference if applicable
+            const examList = currentData.questions || filtered; 
 
             let html = `
-                <div class="watermark">Examination</div>
                 <div class="header-top">
-                    <h1 class="academic-serif text-2xl md:text-3xl font-bold uppercase mb-1">Board of Primary Education</h1>
-                    <h2 class="text-lg md:text-xl font-semibold mb-2">Model Question Examination - ${examData.year}</h2>
-                    <p class="text-base academic-serif italic">Subject: ${examData.subject}</p>
+                    <h1 class="academic-serif text-2xl font-bold uppercase">${currentData.subject}</h1>
+                    <p class="italic text-sm mt-2">Class: ${currentData.class} | Set: ${currentData.model_id || 'A'}</p>
                 </div>
                 <div class="exam-info-grid">
-                    <div>Class: ${examData.class}</div>
-                    <div class="text-right">Time: ${currentTotal < 60 ? '1 Hour 30 Mins' : '2 Hours 30 Mins'}</div>
-                    <div>Set: ${examData.model_id}</div>
-                    <div class="text-right">Full Marks: ${currentTotal}</div>
+                    <div>Time: ${target < 50 ? '1 Hour' : currentData.time}</div>
+                    <div class="text-right">Marks: ${total || currentData.full_marks}</div>
                 </div>
-                <div class="mb-8 text-center font-bold text-xs border border-black p-2">[Answer as instructed. Marks indicated in brackets]</div>
             `;
 
-            filteredSections.forEach(sec => {
-                if (sec.passage) {
-                    html += `<div class="mb-8"><span class="block font-black text-[10px] uppercase tracking-wider mb-2">Read the text below:</span><div class="passage-text hind-siliguri bg-slate-50 p-4 rounded-xl border border-slate-100">${sec.passage}</div></div>`;
-                }
-                sec.questions.forEach(q => {
-                    html += `<div class="question-block"><span class="marks">[${MARKS_MAP[q.id]}]</span><span class="instr font-bold"><span class="mr-1">${q.id}.</span> ${q.instruction}</span>`;
-                    if (q.type === 'matching') {
-                        html += `<div class="overflow-x-auto mt-2"><table><thead><tr><th>Column A</th><th>Column B</th></tr></thead><tbody>${q.columnA.map((c,i) => `<tr><td>${String.fromCharCode(97+i)}) ${c}</td><td>${q.columnB[i] ? q.columnB[i].id + ') ' + q.columnB[i].text : ''}</td></tr>`).join('')}</tbody></table></div>`;
-                    } else if (q.type === 'mcq') {
-                        html += q.items.map((item, i) => `<div class="mt-4 ml-4"><p class="font-bold text-sm">${String.fromCharCode(97+i)}) ${item.q}</p><div class="mcq-grid mt-1 ml-4 text-sm">${item.options.map((opt, oi) => `<span>(${['i','ii','iii','iv'][oi]}) ${opt}</span>`).join('')}</div></div>`).join('');
-                    } else if (q.type === 'short_answer' || q.type === 'descriptive' || q.type === 'composition') {
-                        html += `<ol class="list-[lower-alpha] ml-10 mt-2 space-y-1 text-sm font-medium">${q.items.map(it => `<li>${it}</li>`).join('')}</ol>`;
-                    } else if (q.type === 'fill_in_the_blanks') {
-                        html += `<div class="border border-black p-2 text-center my-3 text-sm font-bold max-w-sm mx-auto">${q.clues.join(' | ')}</div><ul class="ml-10 space-y-1 text-sm">${q.items.map((it, i) => `<li>${String.fromCharCode(97+i)}) ${it}</li>`).join('')}</ul>`;
-                    } else if (q.type === 'sentence_making') {
-                        html += `<p class="ml-10 mt-1 italic text-sm font-bold underline">Words: ${q.words.join(', ')}</p>`;
-                    } else if (q.type === 'gap_fill_verbs') {
-                        html += `<div class="mt-2 text-sm ml-10 italic academic-serif leading-relaxed">${q.text}</div>`;
-                    } else if (q.type === 'wh_questions' || q.type === 'rearrange') {
-                        html += `<ol class="list-[lower-alpha] ml-10 mt-2 space-y-1 text-sm italic">${q.items.map(it => `<li>${typeof it === 'string' ? it : it.text.replace(it.underlined, `<u>${it.underlined}</u>`)}</li>`).join('')}</ol>`;
-                    } else if (q.type === 'punctuation') {
-                        html += `<div class="mt-1 ml-10 bg-slate-50 p-2 text-sm border academic-serif italic">${q.text}</div>`;
-                    } else if (q.type === 'form_filling') {
-                        html += `<div class="border border-black p-6 mt-4 max-w-sm mx-auto relative page-break"><div class="absolute top-2 right-2 border border-black w-16 h-20 flex items-center justify-center text-[8px]">Photo</div><h3 class="text-center font-bold text-sm underline mb-4 uppercase">Registration</h3>${q.fields.map(f => `<div class="flex mb-2 items-end"><span class="w-24 text-[10px] font-bold uppercase">${f}</span> : <div class="flex-1 border-b border-dotted h-3"></div></div>`).join('')}</div>`;
+            const loopData = currentData.questions || filtered;
+            loopData.forEach(item => {
+                const questions = item.questions || [item];
+                if (item.passage) html += `<div class="passage-text mb-6 p-4 bg-slate-50 rounded-xl hind-siliguri">${item.passage}</div>`;
+                
+                questions.forEach(q => {
+                    const marksVal = q.marks || MARKS_MAP[q.id] || q.marks_per_item || '';
+                    html += `<div class="question-block">
+                        <span class="marks">[${marksVal}]</span>
+                        <span class="instr font-bold hind-siliguri">${q.id || ''} ${q.instruction || ''}</span>`;
+                    
+                    if (q.items) {
+                        html += `<ul class="ml-8 mt-2 space-y-2 text-sm hind-siliguri">
+                            ${q.items.map(it => typeof it === 'string' ? `<li>${it}</li>` : `<li>${it.q} <div class="mcq-grid mt-1">${it.options.map((o,i)=>`<span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>`).join('')}</div></li>`).join('')}
+                        </ul>`;
+                    } else if (q.q) {
+                        html += `<p class="ml-8 mt-1 text-sm hind-siliguri">${q.q}</p>`;
+                        if (q.options) html += `<div class="mcq-grid ml-8 mt-1 text-sm hind-siliguri">${q.options.map((o,i)=>`<span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>`).join('')}</div>`;
                     }
                     html += `</div>`;
                 });
             });
+
             container.innerHTML = html;
         }
 
-        window.onload = init;
+        window.onload = updateLockUI;
     </script>
 </body>
 </html>
