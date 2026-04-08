@@ -92,6 +92,18 @@
         }
         @media (min-width: 540px) { .mcq-option-grid { grid-template-cols: 1fr 1fr; } }
 
+        .mcq-choice {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .mcq-choice:hover { background: #f1f5f9; }
+        .mcq-choice input { margin-top: 6px; cursor: pointer; }
+
         @media print {
             body { background: white; }
             .paper-container { padding: 0; margin: 0; max-width: none; }
@@ -156,6 +168,24 @@
                 <button onclick="toggleModal('password-modal', false)" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold">Cancel</button>
                 <button onclick="verifyPassword()" class="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200">Unlock</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="no-print hidden modal-overlay">
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center">
+            <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 mb-2">Exam Result</h3>
+            <div class="space-y-2 mb-8">
+                <p class="text-slate-600 font-bold">Total Correct: <span id="res-correct" class="text-emerald-600">0</span></p>
+                <p class="text-slate-600 font-bold">Total Wrong: <span id="res-wrong" class="text-red-500">0</span></p>
+                <div class="pt-4 border-t border-slate-100">
+                    <p class="text-2xl font-black text-blue-600">Marks Obtained: <span id="res-marks">0</span></p>
+                </div>
+            </div>
+            <button onclick="toggleModal('result-modal', false); showHome();" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">Back to Home</button>
         </div>
     </div>
 
@@ -273,10 +303,13 @@
         <!-- Paper View -->
         <div id="paper-view" class="paper-container hidden">
             <div class="paper" id="paper-content"></div>
-            <div class="no-print mt-12 flex justify-center pb-20">
+            <div id="submit-section" class="no-print mt-12 flex flex-col items-center gap-4 pb-20">
+                <button onclick="calculateResult()" class="w-full max-w-sm bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 rounded-[1.5rem] shadow-xl shadow-emerald-100 transition-all active:scale-95">
+                    SUBMIT ANSWERS
+                </button>
                 <button onclick="showHome()" class="flex items-center gap-3 bg-white border border-slate-200 text-slate-900 font-bold px-10 py-4 rounded-2xl shadow-sm hover:shadow-md transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-                    Finish and Exit
+                    Discard and Exit
                 </button>
             </div>
         </div>
@@ -291,6 +324,7 @@
         let activeSubjectKey = '';
         let currentData = null;
         let timerInterval = null;
+        let renderedQuestions = []; // Track questions shown to user
 
         function toggleModal(id, show) {
             const modal = document.getElementById(id);
@@ -385,32 +419,70 @@
             }, 1000);
         }
 
+        function calculateResult() {
+            let correct = 0;
+            let wrong = 0;
+            let obtainedMarks = 0;
+
+            renderedQuestions.forEach(q => {
+                if (q.type === 'mcq') {
+                    q.items.forEach((item, idx) => {
+                        const name = `q-${q.id}-item-${idx}`;
+                        const selected = document.querySelector(`input[name="${name}"]:checked`);
+                        const correctAnswer = item.ans || "";
+                        
+                        if (selected) {
+                            if (selected.value === correctAnswer) {
+                                correct++;
+                                obtainedMarks += 1;
+                            } else {
+                                wrong++;
+                            }
+                        } else {
+                            // Unanswered counted as neither or wrong? Usually wrong/missed
+                            wrong++;
+                        }
+                    });
+                } else {
+                    // For non-MCQ, we can't auto-grade, but we count correct as 0
+                    // unless teacher evaluation is implemented.
+                }
+            });
+
+            document.getElementById('res-correct').innerText = correct;
+            document.getElementById('res-wrong').innerText = wrong;
+            document.getElementById('res-marks').innerText = obtainedMarks;
+            toggleModal('result-modal', true);
+        }
+
         function renderPaper(target) {
             const container = document.getElementById('paper-content');
             let currentTotal = 0;
+            renderedQuestions = [];
             
             let filteredSections = [];
             if (currentData.full_exam) {
-                filteredSections = currentData.full_exam.map(sec => ({
-                    ...sec,
-                    questions: sec.questions.filter(q => {
+                filteredSections = currentData.full_exam.map(sec => {
+                    const qs = sec.questions.filter(q => {
                         const m = q.marks || MARKS_MAP[q.id] || 0;
                         if (currentTotal + m <= target) { currentTotal += m; return true; }
                         return false;
-                    })
-                })).filter(s => s.questions.length > 0);
+                    });
+                    renderedQuestions.push(...qs);
+                    return { ...sec, questions: qs };
+                }).filter(s => s.questions.length > 0);
             } else if (currentData.questions) {
-                filteredSections = [{
-                    questions: currentData.questions.filter(q => {
-                        let m = q.marks || 0;
-                        if (!m && q.type === 'mcq') m = q.items.length;
-                        if (!m && q.type === 'fill_in_the_blanks') m = q.items.length;
-                        if (!m && q.type === 'short_answer') m = q.items.length * (q.marks_per_item || 2);
-                        if (!m && q.type === 'descriptive') m = q.items.reduce((acc, it) => acc + (it.marks || 6), 0);
-                        if (currentTotal + m <= target) { currentTotal += m; return true; }
-                        return false;
-                    })
-                }];
+                const qs = currentData.questions.filter(q => {
+                    let m = q.marks || 0;
+                    if (!m && q.type === 'mcq') m = q.items.length;
+                    if (!m && q.type === 'fill_in_the_blanks') m = q.items.length;
+                    if (!m && q.type === 'short_answer') m = q.items.length * (q.marks_per_item || 2);
+                    if (!m && q.type === 'descriptive') m = q.items.reduce((acc, it) => acc + (it.marks || 6), 0);
+                    if (currentTotal + m <= target) { currentTotal += m; return true; }
+                    return false;
+                });
+                renderedQuestions.push(...qs);
+                filteredSections = [{ questions: qs }];
             }
 
             let html = `
@@ -428,12 +500,12 @@
                 </div>
             `;
 
-            filteredSections.forEach(sec => {
+            filteredSections.forEach((sec, secIdx) => {
                 if (sec.passage) {
                     html += `<div class="passage-text mb-12 p-8 bg-slate-50 border-y border-slate-200 hind-siliguri leading-relaxed">${sec.passage}</div>`;
                 }
                 
-                sec.questions.forEach(q => {
+                sec.questions.forEach((q, qIdx) => {
                     const marks = q.marks || (q.type === 'mcq' ? q.items.length : (q.type === 'short_answer' ? q.items.length * (q.marks_per_item || 2) : (q.marks_per_item * q.items.length || q.items.length)));
                     
                     html += `<div class="question-block">
@@ -443,10 +515,16 @@
                     if (q.type === 'mcq') {
                         html += `<div class="space-y-6 mt-6">`;
                         q.items.forEach((it, idx) => {
+                            const name = `q-${q.id}-item-${idx}`;
                             html += `<div class="ml-8">
                                 <p class="font-bold hind-siliguri text-slate-900">${it.q || it}</p>
                                 <div class="mcq-option-grid ml-4 mt-2 text-sm hind-siliguri font-medium">
-                                    ${(it.options || []).map((o, i) => `<span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>`).join('')}
+                                    ${(it.options || []).map((o, i) => `
+                                        <label class="mcq-choice">
+                                            <input type="radio" name="${name}" value="${o}">
+                                            <span>(${['ক','খ','গ','ঘ'][i]}) ${o}</span>
+                                        </label>
+                                    `).join('')}
                                 </div>
                             </div>`;
                         });
